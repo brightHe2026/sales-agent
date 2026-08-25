@@ -1,3 +1,4 @@
+from .activity import ActivityCreate, ActivityRead, Participant
 from .extraction import (
     DecisionCandidate,
     ProjectSignal,
@@ -9,6 +10,9 @@ from .extraction import (
 
 __all__ = [
     "DecisionCandidate",
+    "ActivityCreate",
+    "ActivityRead",
+    "Participant",
     "ProjectSignal",
     "RequirementCandidate",
     "RiskCandidate",
