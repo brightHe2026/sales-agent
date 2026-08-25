@@ -13,3 +13,8 @@ node_modules/
 # IDE
 .vscode/
 .cursor/
+.pytest_cache/
+pytest-cache-files-*/
+__pycache__/
+*.py[cod]
+backend/migration_validation.db
