@@ -1,0 +1,31 @@
+{
+  "name": "replace-with-versioned-deidentified-dataset-name",
+  "cases": [
+    {
+      "id": "replace-with-case-id",
+      "raw_content": "REPLACE WITH A DE-IDENTIFIED REAL WORK RECORD",
+      "activity_type": "MANUAL_NOTE",
+      "source_type": "MANUAL",
+      "occurred_at": "2026-01-01T09:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "REPLACE WITH HUMAN-REVIEWED SUMMARY",
+        "project_signal": null,
+        "requirements": [
+          {
+            "title": "REPLACE WITH A HUMAN-REVIEWED EXPECTED FACT",
+            "description": null,
+            "confidence": 1.0,
+            "requirement_type": null,
+            "priority": null
+          }
+        ],
+        "tasks": [],
+        "decisions": [],
+        "risks": [],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    }
+  ]
+}
