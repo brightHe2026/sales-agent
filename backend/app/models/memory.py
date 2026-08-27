@@ -2,7 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Any
 
-from sqlalchemy import CheckConstraint, DateTime, Enum, Float, ForeignKey, JSON, String, Text
+from sqlalchemy import CheckConstraint, DateTime, Enum, Float, ForeignKey, JSON, String, Text, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -105,12 +105,14 @@ class DerivedFactMixin(UUIDMixin, TimestampMixin):
     )
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     confidence: Mapped[float | None] = mapped_column(Float)
+    source_fingerprint: Mapped[str | None] = mapped_column(String(64))
 
 
 class Requirement(DerivedFactMixin, Base):
     __tablename__ = "requirements"
     __table_args__ = (
         CheckConstraint("confidence IS NULL OR (confidence >= 0 AND confidence <= 1)", name="ck_requirements_confidence"),
+        UniqueConstraint("source_activity_id", "source_fingerprint", name="uq_requirements_source_fingerprint"),
     )
 
     description: Mapped[str] = mapped_column(Text, nullable=False)
@@ -124,6 +126,7 @@ class Task(DerivedFactMixin, Base):
     __tablename__ = "tasks"
     __table_args__ = (
         CheckConstraint("confidence IS NULL OR (confidence >= 0 AND confidence <= 1)", name="ck_tasks_confidence"),
+        UniqueConstraint("source_activity_id", "source_fingerprint", name="uq_tasks_source_fingerprint"),
     )
 
     description: Mapped[str | None] = mapped_column(Text)
@@ -139,6 +142,7 @@ class Decision(DerivedFactMixin, Base):
     __tablename__ = "decisions"
     __table_args__ = (
         CheckConstraint("confidence IS NULL OR (confidence >= 0 AND confidence <= 1)", name="ck_decisions_confidence"),
+        UniqueConstraint("source_activity_id", "source_fingerprint", name="uq_decisions_source_fingerprint"),
     )
 
     description: Mapped[str] = mapped_column(Text, nullable=False)
@@ -151,6 +155,7 @@ class Risk(DerivedFactMixin, Base):
     __tablename__ = "risks"
     __table_args__ = (
         CheckConstraint("confidence IS NULL OR (confidence >= 0 AND confidence <= 1)", name="ck_risks_confidence"),
+        UniqueConstraint("source_activity_id", "source_fingerprint", name="uq_risks_source_fingerprint"),
     )
 
     description: Mapped[str] = mapped_column(Text, nullable=False)

@@ -8,6 +8,7 @@ from .activity_extraction import (
     ActivityExtractionService,
     ActivityForExtractionNotFoundError,
 )
+from .memory_update import CandidateValidationError, MemoryUpdateService
 
 __all__ = [
     "ActivityExtractionError",
@@ -16,4 +17,6 @@ __all__ = [
     "ActivityIngestionError",
     "ActivityIngestionService",
     "ActivityReferenceNotFoundError",
+    "CandidateValidationError",
+    "MemoryUpdateService",
 ]

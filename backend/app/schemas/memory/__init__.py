@@ -7,12 +7,15 @@ from .extraction import (
     StructuredActivityExtraction,
     TaskCandidate,
 )
+from .update import FactUpdateCount, MemoryUpdateResult
 
 __all__ = [
     "DecisionCandidate",
     "ActivityCreate",
     "ActivityRead",
     "Participant",
+    "FactUpdateCount",
+    "MemoryUpdateResult",
     "ProjectSignal",
     "RequirementCandidate",
     "RiskCandidate",
