@@ -228,6 +228,20 @@ def test_versioned_deepseek_result_records_failed_gate():
     assert recomputed.hallucinated_facts == replay["metrics"]["hallucinated_facts"]
     assert recomputed.passed is replay["passed"]
 
+    holdout_result_path = path.parent / "deepseek-chat-independent-holdout-v1.json"
+    holdout_result = json.loads(holdout_result_path.read_text(encoding="utf-8"))
+    holdout_dataset_path = path.parents[1] / "dataset.real.deidentified.holdout-v1.json"
+    holdout_report = replay_saved_extractions(
+        load_dataset(holdout_dataset_path),
+        holdout_result,
+    )
+    assert holdout_result["model"] == "deepseek:deepseek-chat"
+    assert holdout_result["dataset_name"] == "presales-daily-report-independent-holdout-v1"
+    assert holdout_result["report"]["dataset_name"] == holdout_result["dataset_name"]
+    assert holdout_result["report"]["case_count"] == 10
+    assert holdout_report.model_dump(mode="json") == holdout_result["report"]
+    assert holdout_report.passed is False
+
 
 def test_runner_artifact_omits_raw_content_field():
     expected = output()

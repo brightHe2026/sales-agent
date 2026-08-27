@@ -24,6 +24,11 @@ Default PASS thresholds:
 - review-required accuracy = 1.00;
 - zero hallucinated facts.
 
+In reports, `hallucinated_facts` is the historical field name for actual output labels that
+did not match an expected canonical title or approved alias. It is a conservative Gate
+signal, not proof that every unmatched label was fabricated; human review must distinguish
+unsupported facts from paraphrases, granularity differences, and classification drift.
+
 The template is not an evaluation result and must never be reported as real data.
 Versioned aggregate run evidence is stored under `results/`; failed runs remain failed and
 must not be reclassified by weakening matching rules after observing model output.
