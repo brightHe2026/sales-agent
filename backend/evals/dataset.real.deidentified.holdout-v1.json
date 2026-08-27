@@ -1,0 +1,260 @@
+{
+  "name": "presales-daily-report-independent-holdout-v1",
+  "cases": [
+    {
+      "id": "2025-11-04-terminal-control-budget",
+      "raw_content": "线上向客户K汇报终端管控方案，采用策略按时间生效的方式。客户关注大量Win7设备、设备与软件开机自动启动、生产网隔离、策略生效缓冲期。客户希望按3个园区、每园区2张网规划，各操作网20台、办公网30台；每张网部署独立管理服务器硬件和一台管理PC。后续需要提供硬件清单和报价预算，客户再向内部领导汇报确认。",
+      "activity_type": "MEETING",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-04T10:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户K提出终端管控部署范围，待提供硬件清单和报价预算。",
+        "project_signal": {"project_name": null, "customer_name": "客户K", "confidence": 1.0},
+        "requirements": [
+          {"title": "策略按时间生效并设置缓冲期", "description": null, "confidence": 1.0},
+          {"title": "兼容较多Win7设备", "description": null, "confidence": 1.0},
+          {"title": "适配设备和软件开机自动启动", "description": null, "confidence": 1.0},
+          {"title": "适配生产隔离网络", "description": null, "confidence": 1.0},
+          {"title": "每张网络部署独立管理服务器和管理PC", "description": null, "confidence": 1.0},
+          {"title": "按3个园区每园区2张网规划", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "提供硬件清单和报价预算", "description": null, "confidence": 1.0, "owner_type": "SELF"},
+          {"title": "向内部领导汇报确认", "description": null, "confidence": 1.0, "owner_type": "CUSTOMER"}
+        ],
+        "decisions": [],
+        "risks": [],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2025-11-05-channel-endpoint-security",
+      "raw_content": "拜访渠道A。渠道有一家互联网游戏行业老客户，部署现有DLP后仍认为有泄密风险，希望增加终端安全管控。已向渠道介绍方案；如果客户认为可行，后续可安排客户交流确认。",
+      "activity_type": "CUSTOMER_VISIT",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-05T10:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "渠道A的游戏行业客户希望用终端安全管控补充现有DLP。",
+        "project_signal": null,
+        "requirements": [
+          {"title": "增加终端安全管控补充现有DLP", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "方案可行后安排客户交流确认", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "现有DLP仍存在泄密风险", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2025-11-05-dlp-consolidation",
+      "raw_content": "拜访客户M。原数据传输系统项目被叫停，客户评估是否统一通过终端DLP实现管控。重点关注DLP审批能否自定义多级灵活审批并对接OA，以及U盘拷贝、审批等审计信息能否在一个UI展示。后续先确认技术可行性并提供成本；还需估算DLP点数扩容、驻场维保和平台升级费用。",
+      "activity_type": "CUSTOMER_VISIT",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-05T15:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户M评估用终端DLP统一替代被叫停的数据传输系统。",
+        "project_signal": {"project_name": null, "customer_name": "客户M", "confidence": 1.0},
+        "requirements": [
+          {"title": "DLP支持自定义多级灵活审批并对接OA", "description": null, "confidence": 1.0},
+          {"title": "统一界面展示U盘拷贝审批审计信息", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "确认DLP技术可行性并提供成本", "description": null, "confidence": 1.0, "owner_type": "SELF"},
+          {"title": "估算DLP扩容驻场维保和平台升级费用", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [
+          {"title": "原数据传输系统项目被叫停", "description": null, "confidence": 1.0}
+        ],
+        "risks": [],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2025-11-06-software-security-selection",
+      "raw_content": "配合渠道拜访客户N。客户认可软件清单更新维护能力，后续以软件管理、安全管理为核心，也认可准入必要性，并希望选择加密等模块。需要提供相关模块供客户选择确认并准备测试；如果测试没有问题，客户可采购，目前约150台终端。",
+      "activity_type": "CUSTOMER_VISIT",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-06T10:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户N将围绕软件和安全管理选择模块并进行测试。",
+        "project_signal": {"project_name": null, "customer_name": "客户N", "confidence": 1.0},
+        "requirements": [
+          {"title": "以软件管理和安全管理为核心", "description": null, "confidence": 1.0},
+          {"title": "纳入准入和加密模块选择", "description": null, "confidence": 1.0},
+          {"title": "覆盖约150台终端", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "提供模块供客户选择确认", "description": null, "confidence": 1.0, "owner_type": "SELF"},
+          {"title": "准备客户测试", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2025-11-06-government-network-operations",
+      "raw_content": "拜访客户O交流政务网络运维。明确需求包括防火墙策略运维统一管理，需要确认对锐捷防火墙的支持并准备测试，客户希望先通过导入配置测试功能。客户还对虎符锁感兴趣，希望与业务开发人员进一步交流以确认代码逻辑中的验证接入。另一个多屏监控场景尚需开发，且客户下游资金不确定。",
+      "activity_type": "CUSTOMER_VISIT",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-06T14:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户O重点推进防火墙统一运维测试和虎符锁业务接入交流。",
+        "project_signal": {"project_name": null, "customer_name": "客户O", "confidence": 1.0},
+        "requirements": [
+          {"title": "统一管理防火墙策略运维", "description": null, "confidence": 1.0},
+          {"title": "支持锐捷防火墙", "description": null, "confidence": 1.0},
+          {"title": "支持导入配置方式测试", "description": null, "confidence": 1.0},
+          {"title": "虎符锁验证接入需与业务代码结合", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "确认锐捷防火墙支持情况", "description": null, "confidence": 1.0, "owner_type": "SELF"},
+          {"title": "准备防火墙配置导入测试", "description": null, "confidence": 1.0, "owner_type": "SELF"},
+          {"title": "安排虎符锁与业务开发人员交流", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "多屏监控功能仍需开发", "description": null, "confidence": 1.0, "severity": "UNKNOWN"},
+          {"title": "下游客户资金不确定", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2025-11-07-phased-access-control",
+      "raw_content": "跟进客户P项目，招标参数和功能演示答疑基本完成。客户内部过会后招标，预计12月前发布。一期针对集团总部，以准入为主；前期无论MAC还是客户端802.1x都先不做管控，确保设备可入网并记录日志，后续按区域逐步开启管控。实施一期时还需协助规划二期约200多个点的准入和管控开启方式。其他点合计仅10名IT且很多是行政兼职。",
+      "activity_type": "BID_ACTIVITY",
+      "source_type": "MANUAL",
+      "occurred_at": "2025-11-07T10:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户P计划分阶段建设准入，一期总部先记录日志再逐步管控。",
+        "project_signal": {"project_name": null, "customer_name": "客户P", "confidence": 1.0},
+        "requirements": [
+          {"title": "一期以集团总部准入为主", "description": null, "confidence": 1.0},
+          {"title": "前期设备入网只记录日志不做管控", "description": null, "confidence": 1.0},
+          {"title": "后续按区域逐步开启管控", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "客户内部过会后启动招标", "description": null, "confidence": 1.0, "owner_type": "CUSTOMER"},
+          {"title": "协助梳理二期准入管控规划", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "二期站点IT人员不足且多为兼职", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2026-03-09-xiam-environment",
+      "raw_content": "客户Q的XIAM测试环境已部署。底层使用CentOS 8时遇到环境配合问题，现已解决；等待客户验证是否能够登录Web管理界面。",
+      "activity_type": "POC_ACTIVITY",
+      "source_type": "MANUAL",
+      "occurred_at": "2026-03-09T15:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户Q的XIAM测试环境问题已解决，待客户验证Web登录。",
+        "project_signal": {"project_name": "XIAM测试", "customer_name": "客户Q", "confidence": 1.0},
+        "requirements": [],
+        "tasks": [
+          {"title": "验证能否登录Web管理界面", "description": null, "confidence": 1.0, "owner_type": "CUSTOMER"}
+        ],
+        "decisions": [],
+        "risks": [],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2026-03-11-domain-exit-authentication",
+      "raw_content": "跟进客户R的XCAD和IAM需求。客户原先使用微软AD域，出于安全考虑希望退域，并通过客户端接管开机认证。目前正在沟通采用XCAD，还是客户端结合开机登录场景的方案。",
+      "activity_type": "WECHAT_COMMUNICATION",
+      "source_type": "MANUAL",
+      "occurred_at": "2026-03-11T14:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户R计划退出微软AD域并改用客户端开机认证，方案路线待定。",
+        "project_signal": {"project_name": null, "customer_name": "客户R", "confidence": 1.0},
+        "requirements": [
+          {"title": "退出微软AD域", "description": null, "confidence": 1.0},
+          {"title": "客户端接管开机认证", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "确认采用XCAD还是客户端开机登录方案", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "XCAD与客户端方案路线尚未确定", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": true
+      }
+    },
+    {
+      "id": "2026-03-13-nspm-poc",
+      "raw_content": "为客户S现场部署NSPM测试环境，部署及平台场景沟通已完成。核心需求是防火墙ACL梳理检查、辅助网络异常排障，例如判断路由或NAT配置导致的网络不通，以及设置合规检查项。上述需求均可满足。后续使用与生产一比一的测试环境，以在线管理方式纳管设备测试，预计下下周安排；客户下周有其他项目无法配合。",
+      "activity_type": "POC_ACTIVITY",
+      "source_type": "MANUAL",
+      "occurred_at": "2026-03-13T10:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户S的NSPM环境已部署，待下下周在生产等比环境完成验证。",
+        "project_signal": {"project_name": "NSPM测试", "customer_name": "客户S", "confidence": 1.0},
+        "requirements": [
+          {"title": "梳理检查防火墙ACL", "description": null, "confidence": 1.0},
+          {"title": "辅助排查路由或NAT配置问题", "description": null, "confidence": 1.0},
+          {"title": "设置合规检查项", "description": null, "confidence": 1.0},
+          {"title": "在线纳管生产等比测试环境设备", "description": null, "confidence": 1.0}
+        ],
+        "tasks": [
+          {"title": "下下周安排最终功能测试验证", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "客户下周无法配合测试", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    },
+    {
+      "id": "2026-03-13-custom-demo-development",
+      "raw_content": "跟进客户T项目，已与客户负责人明确测试演示要求。演示需求需要产品研发介入配合开发，内部信息已对齐；计划周一投入开发对接，预计周四下午到客户现场演示。",
+      "activity_type": "POC_ACTIVITY",
+      "source_type": "MANUAL",
+      "occurred_at": "2026-03-13T15:00:00+08:00",
+      "participants": null,
+      "expected": {
+        "summary": "客户T演示需求已明确，待研发开发并于周四现场演示。",
+        "project_signal": {"project_name": null, "customer_name": "客户T", "confidence": 1.0},
+        "requirements": [],
+        "tasks": [
+          {"title": "周一投入开发对接", "description": null, "confidence": 1.0, "owner_type": "TEAM"},
+          {"title": "周四下午到客户现场演示", "description": null, "confidence": 1.0, "owner_type": "SELF"}
+        ],
+        "decisions": [],
+        "risks": [
+          {"title": "演示依赖产品研发开发", "description": null, "confidence": 1.0, "severity": "UNKNOWN"}
+        ],
+        "overall_confidence": 1.0,
+        "review_required": false
+      }
+    }
+  ]
+}

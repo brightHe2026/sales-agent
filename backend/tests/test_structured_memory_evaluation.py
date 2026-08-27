@@ -192,6 +192,15 @@ def test_deidentified_real_dataset_loads():
     assert v2_dataset.name == "presales-daily-report-deidentified-v2-2026-04"
     assert len(v2_dataset.cases) == 10
 
+    holdout_path = (
+        Path(__file__).parents[1]
+        / "evals"
+        / "dataset.real.deidentified.holdout-v1.json"
+    )
+    holdout = load_dataset(holdout_path)
+    assert holdout.name == "presales-daily-report-independent-holdout-v1"
+    assert len(holdout.cases) == 10
+
 
 def test_versioned_deepseek_result_records_failed_gate():
     path = Path(__file__).parents[1] / "evals" / "results" / "deepseek-chat-v1.json"
