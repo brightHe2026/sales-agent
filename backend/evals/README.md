@@ -6,8 +6,15 @@ contracts, credentials, or identifying personal information.
 
 Each expected extraction is human-reviewed ground truth. Confidence values are required
 by the runtime schema but are not scored. Project/customer signals and candidate facts use
-normalized exact matching; task owner type/name and the review-required decision are scored
-separately. A missing expected task counts as a failed owner check.
+normalized exact matching. A case may explicitly list human-reviewed `fact_aliases` for
+equivalent wording; unlisted paraphrases never match. Task owner type/name and the
+review-required decision are scored separately. A missing expected task counts as a failed
+owner check.
+
+Alias keys use `<kind>:<normalized canonical title>`, for example:
+`"task:提供整体规划方案材料": ["提供整体规划材料"]`. An alias must preserve the
+same fact, polarity, subject, and task responsibility; it must never be used to equate
+different customers, projects, owners, or positive/negative statements.
 
 Default PASS thresholds:
 
@@ -18,3 +25,5 @@ Default PASS thresholds:
 - zero hallucinated facts.
 
 The template is not an evaluation result and must never be reported as real data.
+Versioned aggregate run evidence is stored under `results/`; failed runs remain failed and
+must not be reclassified by weakening matching rules after observing model output.

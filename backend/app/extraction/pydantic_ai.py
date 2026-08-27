@@ -14,6 +14,13 @@ dates, customer names, project names, decisions, requirements, or risks.
 Use UNKNOWN or null when evidence is insufficient. Candidate facts are proposals
 for later validation; they must not imply that anything was written to a database.
 Set review_required when the source is ambiguous, contradictory, or confidence is low.
+Keep customer and project aliases exactly as written in the source. Reuse source wording
+for concise candidate titles instead of paraphrasing it. A task is only a future or
+unfinished action; do not turn completed work into a task. Daily reports are written
+from the author's perspective, so an unassigned future action such as "后续提供" may be
+SELF only when the wording clearly makes the author responsible. Set review_required
+only when unresolved ambiguity or contradiction materially affects the extracted facts,
+not merely because the record contains routine follow-up work.
 """.strip()
 
 

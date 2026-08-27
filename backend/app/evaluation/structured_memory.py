@@ -82,22 +82,31 @@ class StructuredMemoryEvaluator:
         actual_count = 0
         missing: list[str] = []
         hallucinated: list[str] = []
+        task_title_pairs: list[tuple[str, str]] = []
         for kind in expected_by_kind:
             expected = expected_by_kind[kind]
             observed = actual_by_kind[kind]
-            matched += sum((expected & observed).values())
+            pairs, missing_facts, hallucinated_facts = self._match_facts(
+                kind,
+                expected,
+                observed,
+                case.fact_aliases,
+            )
+            matched += len(pairs)
             expected_count += expected.total()
             actual_count += observed.total()
-            missing.extend(self._labels(kind, expected - observed))
-            hallucinated.extend(self._labels(kind, observed - expected))
+            missing.extend(self._labels(kind, missing_facts))
+            hallucinated.extend(self._labels(kind, hallucinated_facts))
+            if kind == "task":
+                task_title_pairs = pairs
 
         expected_tasks = {normalize(item.title): item for item in case.expected.tasks}
         actual_tasks = {normalize(item.title): item for item in actual.tasks}
         owner_matches = sum(
-            expected_tasks[title].owner_type == actual_tasks[title].owner_type
-            and normalize(expected_tasks[title].owner_name or "")
-            == normalize(actual_tasks[title].owner_name or "")
-            for title in expected_tasks.keys() & actual_tasks.keys()
+            expected_tasks[expected_title].owner_type == actual_tasks[actual_title].owner_type
+            and normalize(expected_tasks[expected_title].owner_name or "")
+            == normalize(actual_tasks[actual_title].owner_name or "")
+            for expected_title, actual_title in task_title_pairs
         )
         return EvaluationCaseResult(
             case_id=case.id,
@@ -139,3 +148,35 @@ class StructuredMemoryEvaluator:
             for title in sorted(facts)
             for _ in range(facts[title])
         ]
+
+    def _match_facts(
+        self,
+        kind: str,
+        expected: Counter[str],
+        actual: Counter[str],
+        aliases: dict[str, list[str]],
+    ) -> tuple[list[tuple[str, str]], Counter[str], Counter[str]]:
+        expected_items = list(expected.elements())
+        actual_items = list(actual.elements())
+        pairs: list[tuple[str, str]] = []
+        matched_expected: set[int] = set()
+        matched_actual: set[int] = set()
+        for expected_index, expected_title in enumerate(expected_items):
+            accepted = {expected_title}
+            accepted.update(
+                normalize(alias)
+                for alias in aliases.get(f"{kind}:{expected_title}", [])
+            )
+            for actual_index, actual_title in enumerate(actual_items):
+                if actual_index not in matched_actual and actual_title in accepted:
+                    matched_expected.add(expected_index)
+                    matched_actual.add(actual_index)
+                    pairs.append((expected_title, actual_title))
+                    break
+        missing = Counter(
+            title for index, title in enumerate(expected_items) if index not in matched_expected
+        )
+        hallucinated = Counter(
+            title for index, title in enumerate(actual_items) if index not in matched_actual
+        )
+        return pairs, missing, hallucinated

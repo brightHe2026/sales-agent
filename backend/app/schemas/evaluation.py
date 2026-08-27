@@ -17,6 +17,7 @@ class EvaluationCase(BaseModel):
     occurred_at: datetime
     participants: list[Participant] | None = None
     expected: StructuredActivityExtraction
+    fact_aliases: dict[str, list[str]] = Field(default_factory=dict)
 
     @field_validator("raw_content")
     @classmethod
@@ -31,6 +32,39 @@ class EvaluationCase(BaseModel):
         if value.tzinfo is None or value.utcoffset() is None:
             raise ValueError("occurred_at must include a timezone")
         return value
+
+    @model_validator(mode="after")
+    def validate_fact_aliases(self) -> "EvaluationCase":
+        signal = self.expected.project_signal
+        canonical: dict[str, set[str]] = {
+            "project": {signal.project_name} if signal and signal.project_name else set(),
+            "customer": {signal.customer_name} if signal and signal.customer_name else set(),
+            "requirement": {item.title for item in self.expected.requirements},
+            "task": {item.title for item in self.expected.tasks},
+            "decision": {item.title for item in self.expected.decisions},
+            "risk": {item.title for item in self.expected.risks},
+        }
+        valid_keys = {
+            f"{kind}:{' '.join(title.casefold().split())}"
+            for kind, titles in canonical.items()
+            for title in titles
+        }
+        unknown_keys = set(self.fact_aliases) - valid_keys
+        if unknown_keys:
+            raise ValueError(f"fact_aliases contains unknown labels: {sorted(unknown_keys)}")
+        accepted: dict[str, str] = {key: key for key in valid_keys}
+        for key, values in self.fact_aliases.items():
+            kind = key.split(":", 1)[0]
+            for value in values:
+                normalized = " ".join(value.casefold().split())
+                if not normalized:
+                    raise ValueError("fact aliases must not be blank")
+                alias_key = f"{kind}:{normalized}"
+                existing = accepted.get(alias_key)
+                if existing is not None and existing != key:
+                    raise ValueError(f"fact alias {value!r} maps to multiple facts")
+                accepted[alias_key] = key
+        return self
 
 
 class EvaluationDataset(BaseModel):

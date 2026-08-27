@@ -1,3 +1,4 @@
+import json
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -33,7 +34,7 @@ def output(requirement="Support SSO", task="Send POC plan", owner=OwnerType.SELF
     )
 
 
-def case(case_id, raw_content, expected):
+def case(case_id, raw_content, expected, *, fact_aliases=None):
     return EvaluationCase(
         id=case_id,
         raw_content=raw_content,
@@ -41,6 +42,7 @@ def case(case_id, raw_content, expected):
         source_type=SourceType.MANUAL,
         occurred_at=datetime.now(timezone.utc),
         expected=expected,
+        fact_aliases=fact_aliases or {},
     )
 
 
@@ -92,6 +94,45 @@ def test_missing_task_cannot_bypass_owner_gate():
     assert report.passed is False
 
 
+def test_human_reviewed_alias_matches_deterministically():
+    expected = output(task="提供整体规划方案材料", owner=OwnerType.SELF)
+    actual = output(task="提供整体规划材料", owner=OwnerType.SELF)
+    evaluation_case = case(
+        "case-1",
+        "record",
+        expected,
+        fact_aliases={"task:提供整体规划方案材料": ["提供整体规划材料"]},
+    )
+    dataset = EvaluationDataset(name="test", cases=[evaluation_case])
+    report = StructuredMemoryEvaluator(MappingExtractor({"record": actual})).evaluate(dataset)
+    assert report.precision == 1.0
+    assert report.recall == 1.0
+    assert report.owner_accuracy == 1.0
+    assert report.hallucinated_facts == 0
+
+
+def test_unrelated_titles_do_not_match():
+    expected = output(requirement="支持终端基线安全")
+    actual = output(requirement="提供高可用资源清单")
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "record", expected)])
+    report = StructuredMemoryEvaluator(MappingExtractor({"record": actual})).evaluate(dataset)
+    assert "requirement:支持终端基线安全" in report.cases[0].missing_facts
+    assert "requirement:提供高可用资源清单" in report.cases[0].hallucinated_fact_labels
+
+
+def test_customer_alias_and_negation_are_not_fuzzy_matched():
+    expected = output(requirement="支持高可用")
+    expected.project_signal = ProjectSignal(customer_name="客户A", confidence=1.0)
+    actual = output(requirement="不支持高可用")
+    actual.project_signal = ProjectSignal(customer_name="客户B", confidence=1.0)
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "record", expected)])
+    report = StructuredMemoryEvaluator(MappingExtractor({"record": actual})).evaluate(dataset)
+    assert "customer:客户a" in report.cases[0].missing_facts
+    assert "customer:客户b" in report.cases[0].hallucinated_fact_labels
+    assert "requirement:支持高可用" in report.cases[0].missing_facts
+    assert "requirement:不支持高可用" in report.cases[0].hallucinated_fact_labels
+
+
 def test_invented_project_signal_counts_as_hallucination():
     expected = output()
     actual = output()
@@ -141,6 +182,14 @@ def test_deidentified_real_dataset_loads():
     assert len(dataset.cases) == 10
 
 
+def test_versioned_deepseek_result_records_failed_gate():
+    path = Path(__file__).parents[1] / "evals" / "results" / "deepseek-chat-v1.json"
+    result = json.loads(path.read_text(encoding="utf-8"))
+    assert result["dataset_name"] == "presales-daily-report-deidentified-v1-2026-04"
+    assert result["case_count"] == 10
+    assert result["passed"] is False
+
+
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():
     base = {
         "id": "case-1",
@@ -174,3 +223,38 @@ def test_dataset_rejects_duplicate_case_ids_and_no_expected_facts():
     )
     with pytest.raises(ValidationError, match="duplicate normalized tasks titles"):
         EvaluationDataset(name="duplicate-facts", cases=[duplicate_fact_case])
+
+
+def test_case_rejects_unknown_blank_and_ambiguous_aliases():
+    expected = output(requirement="支持高可用")
+    with pytest.raises(ValidationError, match="unknown labels"):
+        EvaluationCase(
+            id="case-1",
+            raw_content="record",
+            activity_type=ActivityType.MEETING,
+            occurred_at=datetime.now(timezone.utc),
+            expected=expected,
+            fact_aliases={"risk:不存在": ["别名"]},
+        )
+    with pytest.raises(ValidationError, match="must not be blank"):
+        EvaluationCase(
+            id="case-1",
+            raw_content="record",
+            activity_type=ActivityType.MEETING,
+            occurred_at=datetime.now(timezone.utc),
+            expected=expected,
+            fact_aliases={"requirement:支持高可用": ["   "]},
+        )
+    ambiguous_expected = output(requirement="高可用")
+    ambiguous_expected.requirements.append(
+        RequirementCandidate(title="Support SSO", confidence=1.0)
+    )
+    with pytest.raises(ValidationError, match="maps to multiple facts"):
+        EvaluationCase(
+            id="case-1",
+            raw_content="record",
+            activity_type=ActivityType.MEETING,
+            occurred_at=datetime.now(timezone.utc),
+            expected=ambiguous_expected,
+            fact_aliases={"requirement:高可用": ["Support SSO"]},
+        )

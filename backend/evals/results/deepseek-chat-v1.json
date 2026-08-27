@@ -1,0 +1,30 @@
+{
+  "evaluated_at": "2026-08-28",
+  "model": "deepseek:deepseek-chat",
+  "dataset_name": "presales-daily-report-deidentified-v1-2026-04",
+  "case_count": 10,
+  "matching_policy": "normalized exact titles plus human-reviewed case aliases",
+  "thresholds": {
+    "min_precision": 0.9,
+    "min_recall": 0.85,
+    "min_owner_accuracy": 0.9,
+    "min_review_accuracy": 1.0,
+    "max_hallucinated_facts": 0
+  },
+  "metrics": {
+    "precision": 0.1724137931034483,
+    "recall": 0.13513513513513514,
+    "f1": 0.15151515151515152,
+    "owner_accuracy": 0.0,
+    "review_required_accuracy": 0.7,
+    "hallucinated_facts": 48
+  },
+  "passed": false,
+  "diagnosis": [
+    "The model frequently paraphrased canonical fact titles, which strict matching correctly leaves unmatched unless a human-reviewed alias exists.",
+    "Completed actions were still sometimes classified as future tasks.",
+    "Expected task ownership was not reproduced for any matched expected task.",
+    "The review_required decision differed from ground truth in three of ten cases."
+  ],
+  "notes": "Only aggregate metrics and diagnosis are stored; API credentials and model responses are excluded. This failed run must not be represented as a passing evaluation."
+}
