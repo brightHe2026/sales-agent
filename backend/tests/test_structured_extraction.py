@@ -7,6 +7,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from app.enums.memory import ActivityType, ExtractionStatus, OwnerType, SourceType
 from app.extraction import PydanticActivityExtractor
+from app.extraction.pydantic_ai import EXTRACTION_INSTRUCTIONS
 from app.models import Activity, Decision, Requirement, Risk, Task
 from app.repositories.memory import ActivityRepository
 from app.schemas.memory.extraction import StructuredActivityExtraction, TaskCandidate
@@ -146,3 +147,10 @@ def test_pydantic_ai_enforces_typed_output_without_network(session):
     assert isinstance(result, StructuredActivityExtraction)
     assert result.tasks[0].owner_type is OwnerType.SELF
     assert result.overall_confidence == 0.95
+
+
+def test_extraction_prompt_version_and_grounding_rules_are_explicit():
+    assert PydanticActivityExtractor.prompt_version == "structured-memory-v1"
+    assert "Extract only facts explicitly supported" in EXTRACTION_INSTRUCTIONS
+    assert "do not turn completed work into a task" in EXTRACTION_INSTRUCTIONS
+    assert "SELF only when" in EXTRACTION_INSTRUCTIONS

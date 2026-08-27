@@ -43,6 +43,7 @@ def evaluate_dataset(
     return {
         "evaluated_at": datetime.now(timezone.utc).isoformat(),
         "model": model_name,
+        "extraction_prompt_version": getattr(extractor, "prompt_version", "unknown"),
         "dataset_name": dataset.name,
         "report": report.model_dump(mode="json"),
         "actual_extractions": [

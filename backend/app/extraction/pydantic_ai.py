@@ -29,6 +29,8 @@ class ActivityExtractor(Protocol):
 
 
 class PydanticActivityExtractor:
+    prompt_version = "structured-memory-v1"
+
     def __init__(self, model: Model, *, retries: int = 2) -> None:
         self.agent = Agent(
             model,

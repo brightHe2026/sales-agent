@@ -218,6 +218,7 @@ def test_versioned_deepseek_result_records_failed_gate():
 
     detailed_path = path.parent / replay["actual_extractions_source"]
     detailed = json.loads(detailed_path.read_text(encoding="utf-8"))
+    assert "extraction_prompt_version" not in detailed
     dataset_path = path.parents[1] / "dataset.real.deidentified.v2.json"
     recomputed = replay_saved_extractions(load_dataset(dataset_path), detailed)
     assert recomputed.precision == replay["metrics"]["precision"]
@@ -252,6 +253,7 @@ def test_runner_artifact_omits_raw_content_field():
         model_name="test:model",
     )
     assert artifact["model"] == "test:model"
+    assert artifact["extraction_prompt_version"] == "unknown"
     assert artifact["report"]["passed"] is True
     assert artifact["actual_extractions"][0]["case_id"] == "case-1"
     assert artifact["actual_extractions"][0]["extraction"] == expected.model_dump(mode="json")
@@ -316,6 +318,38 @@ def test_replay_rejects_saved_outputs_in_wrong_case_order():
     }
     with pytest.raises(ValueError, match="case ids do not match dataset order"):
         replay_saved_extractions(dataset, artifact)
+
+
+def test_prompt_v2_regression_evidence_recomputes_without_aliases():
+    root = Path(__file__).parents[1]
+    results = root / "evals" / "results"
+    comparison = json.loads(
+        (results / "deepseek-chat-dev-prompt-v2-regression.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    dataset = load_dataset(root / "evals" / "dataset.real.deidentified.v2.json")
+    without_aliases = dataset.model_copy(
+        update={
+            "cases": [
+                evaluation_case.model_copy(update={"fact_aliases": {}})
+                for evaluation_case in dataset.cases
+            ]
+        }
+    )
+    baseline = json.loads(
+        (results / comparison["baseline_artifact"]).read_text(encoding="utf-8")
+    )
+    candidate = json.loads(
+        (results / comparison["candidate_artifact"]).read_text(encoding="utf-8")
+    )
+    baseline_report = replay_saved_extractions(without_aliases, baseline)
+    candidate_report = replay_saved_extractions(without_aliases, candidate)
+    assert baseline_report.f1 == comparison["baseline"]["f1"]
+    assert candidate_report.f1 == comparison["candidate"]["f1"]
+    assert candidate["extraction_prompt_version"] == "structured-memory-v2"
+    assert comparison["accepted"] is False
+    assert candidate_report.f1 < baseline_report.f1
 
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():

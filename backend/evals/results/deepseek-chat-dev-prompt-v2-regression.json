@@ -1,0 +1,35 @@
+{
+  "evaluated_at": "2026-08-28",
+  "model": "deepseek:deepseek-chat",
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "run_type": "development-prompt-comparison",
+  "independent_holdout": false,
+  "matching_policy": "normalized exact titles with all case aliases disabled for both runs",
+  "baseline_artifact": "deepseek-chat-v1-detailed-run.json",
+  "candidate_artifact": "deepseek-chat-dev-v2-prompt-v2.json",
+  "baseline": {
+    "extraction_prompt_version": "structured-memory-v1",
+    "precision": 0.25,
+    "recall": 0.21212121212121213,
+    "f1": 0.22950819672131145,
+    "owner_accuracy": 0.09090909090909091,
+    "review_required_accuracy": 0.7,
+    "actual_facts": 56,
+    "matched_facts": 14,
+    "unmatched_actual_labels": 42
+  },
+  "candidate": {
+    "extraction_prompt_version": "structured-memory-v2",
+    "precision": 0.17333333333333334,
+    "recall": 0.19696969696969696,
+    "f1": 0.18439716312056736,
+    "owner_accuracy": 0.0,
+    "review_required_accuracy": 0.8,
+    "actual_facts": 75,
+    "matched_facts": 13,
+    "unmatched_actual_labels": 62
+  },
+  "accepted": false,
+  "decision": "Revert prompt v2 as a regression; keep structured-memory-v1 as the default.",
+  "notes": "This is development evidence, not an independent acceptance gate. The locked holdout was not used or modified during this prompt comparison."
+}
