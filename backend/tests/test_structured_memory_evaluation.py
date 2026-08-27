@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from app.enums.memory import ActivityType, OwnerType, SourceType
 from app.evaluation import StructuredMemoryEvaluator, load_dataset
+from app.evaluation.runner import evaluate_dataset, report_exit_code, run_evaluation
 from app.schemas.evaluation import EvaluationCase, EvaluationDataset, EvaluationThresholds
 from app.schemas.memory.extraction import (
     RequirementCandidate,
@@ -188,6 +189,64 @@ def test_versioned_deepseek_result_records_failed_gate():
     assert result["dataset_name"] == "presales-daily-report-deidentified-v1-2026-04"
     assert result["case_count"] == 10
     assert result["passed"] is False
+
+
+def test_runner_artifact_omits_raw_content_field():
+    expected = output()
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "record", expected)])
+    artifact = evaluate_dataset(
+        dataset,
+        MappingExtractor({"record": expected}),
+        model_name="test:model",
+    )
+    assert artifact["model"] == "test:model"
+    assert artifact["report"]["passed"] is True
+    assert artifact["actual_extractions"][0]["case_id"] == "case-1"
+    assert artifact["actual_extractions"][0]["extraction"] == expected.model_dump(mode="json")
+    assert "raw_content" not in json.dumps(artifact, ensure_ascii=False)
+
+
+def test_runner_existing_output_fails_before_extractor_creation():
+    root = Path(__file__).parents[1]
+    existing_output = root / "evals" / "results" / "deepseek-chat-v1.json"
+
+    def forbidden_factory(_model_name):
+        raise AssertionError("extractor must not be created")
+
+    with pytest.raises(FileExistsError):
+        run_evaluation(
+            root / "evals" / "dataset.real.deidentified.v1.json",
+            existing_output,
+            model_name="test:model",
+            extractor_factory=forbidden_factory,
+        )
+
+
+def test_runner_removes_reserved_output_when_extraction_fails():
+    root = Path(__file__).parents[1]
+    output_path = root / "evals" / "results" / ".runner-failure-test.json"
+    output_path.unlink(missing_ok=True)
+
+    class FailingExtractor:
+        def extract(self, _activity):
+            raise RuntimeError("model failed")
+
+    try:
+        with pytest.raises(RuntimeError, match="model failed"):
+            run_evaluation(
+                root / "evals" / "dataset.real.deidentified.v1.json",
+                output_path,
+                model_name="test:model",
+                extractor_factory=lambda _model_name: FailingExtractor(),
+            )
+        assert not output_path.exists()
+    finally:
+        output_path.unlink(missing_ok=True)
+
+
+def test_runner_exit_code_reflects_gate_result():
+    assert report_exit_code({"report": {"passed": True}}) == 0
+    assert report_exit_code({"report": {"passed": False}}) == 1
 
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():

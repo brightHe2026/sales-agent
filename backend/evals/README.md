@@ -27,3 +27,18 @@ Default PASS thresholds:
 The template is not an evaluation result and must never be reported as real data.
 Versioned aggregate run evidence is stored under `results/`; failed runs remain failed and
 must not be reclassified by weakening matching rules after observing model output.
+
+Run the DeepSeek evaluation from `backend/` with `DEEPSEEK_API_KEY` configured:
+
+```powershell
+python -m app.evaluation.runner evals/dataset.real.deidentified.v1.json `
+  --model deepseek:deepseek-chat `
+  --output evals/results/deepseek-chat-run.json
+```
+
+The output path must not already exist. The artifact includes per-case model extractions
+for human alias adjudication and an aggregate report; it never stores the API key. The
+Runner reserves the output before any model call. If a call or write fails, it removes the
+incomplete artifact; retrying will call the model again for every case.
+Model-generated summaries, titles, and descriptions may quote or paraphrase source content;
+treat every result artifact with the same sensitivity as its evaluation dataset.
