@@ -1,14 +1,18 @@
 from datetime import datetime
+from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints, model_validator
 
 from app.enums.memory import OwnerType, Priority, RiskSeverity
+
+
+NonBlankText = Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
 
 
 class CandidateBase(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    title: str
+    title: NonBlankText
     description: str | None = None
     confidence: float = Field(ge=0.0, le=1.0)
 
@@ -16,9 +20,15 @@ class CandidateBase(BaseModel):
 class ProjectSignal(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    project_name: str | None = None
-    customer_name: str | None = None
+    project_name: NonBlankText | None = None
+    customer_name: NonBlankText | None = None
     confidence: float = Field(ge=0.0, le=1.0)
+
+    @model_validator(mode="after")
+    def require_signal(self) -> "ProjectSignal":
+        if self.project_name is None and self.customer_name is None:
+            raise ValueError("project_signal requires a project or customer name")
+        return self
 
 
 class RequirementCandidate(CandidateBase):
@@ -46,7 +56,7 @@ class RiskCandidate(CandidateBase):
 class StructuredActivityExtraction(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    summary: str
+    summary: NonBlankText
     project_signal: ProjectSignal | None = None
     requirements: list[RequirementCandidate] = Field(default_factory=list)
     tasks: list[TaskCandidate] = Field(default_factory=list)

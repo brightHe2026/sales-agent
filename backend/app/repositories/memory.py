@@ -46,6 +46,15 @@ class ActivityRepository:
             self.session.rollback()
             raise
 
+    def save(self, activity: Activity) -> Activity:
+        try:
+            self.session.add(activity)
+            self.session.commit()
+            return activity
+        except Exception:
+            self.session.rollback()
+            raise
+
 
 class ProjectMemoryRepository:
     """Read a project and its current structured memory in one repository call."""

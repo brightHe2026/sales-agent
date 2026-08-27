@@ -3,5 +3,17 @@ from .activity_ingestion import (
     ActivityIngestionService,
     ActivityReferenceNotFoundError,
 )
+from .activity_extraction import (
+    ActivityExtractionError,
+    ActivityExtractionService,
+    ActivityForExtractionNotFoundError,
+)
 
-__all__ = ["ActivityIngestionError", "ActivityIngestionService", "ActivityReferenceNotFoundError"]
+__all__ = [
+    "ActivityExtractionError",
+    "ActivityExtractionService",
+    "ActivityForExtractionNotFoundError",
+    "ActivityIngestionError",
+    "ActivityIngestionService",
+    "ActivityReferenceNotFoundError",
+]
