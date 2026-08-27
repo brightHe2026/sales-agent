@@ -1,0 +1,27 @@
+{
+  "evaluated_at": "2026-08-28",
+  "model": "deepseek:deepseek-chat",
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "case_count": 10,
+  "run_type": "offline-replay",
+  "actual_extractions_source": "deepseek-chat-v1-detailed-run.json",
+  "independent_holdout": false,
+  "matching_policy": "normalized exact titles plus independently reviewed case aliases",
+  "thresholds": {
+    "min_precision": 0.9,
+    "min_recall": 0.85,
+    "min_owner_accuracy": 0.9,
+    "min_review_accuracy": 1.0,
+    "max_hallucinated_facts": 0
+  },
+  "metrics": {
+    "precision": 0.6607142857142857,
+    "recall": 0.5606060606060606,
+    "f1": 0.6065573770491803,
+    "owner_accuracy": 0.7272727272727273,
+    "review_required_accuracy": 0.7,
+    "hallucinated_facts": 19
+  },
+  "passed": false,
+  "notes": "The same saved model outputs were replayed against independently corrected v2 ground truth. Because aliases and corrections were adjudicated after observing outputs, this is diagnostic evidence, not an unbiased final acceptance gate."
+}

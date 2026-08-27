@@ -7,7 +7,12 @@ from pydantic import ValidationError
 
 from app.enums.memory import ActivityType, OwnerType, SourceType
 from app.evaluation import StructuredMemoryEvaluator, load_dataset
-from app.evaluation.runner import evaluate_dataset, report_exit_code, run_evaluation
+from app.evaluation.runner import (
+    evaluate_dataset,
+    replay_saved_extractions,
+    report_exit_code,
+    run_evaluation,
+)
 from app.schemas.evaluation import EvaluationCase, EvaluationDataset, EvaluationThresholds
 from app.schemas.memory.extraction import (
     RequirementCandidate,
@@ -182,6 +187,11 @@ def test_deidentified_real_dataset_loads():
     assert dataset.name == "presales-daily-report-deidentified-v1-2026-04"
     assert len(dataset.cases) == 10
 
+    v2_path = Path(__file__).parents[1] / "evals" / "dataset.real.deidentified.v2.json"
+    v2_dataset = load_dataset(v2_path)
+    assert v2_dataset.name == "presales-daily-report-deidentified-v2-2026-04"
+    assert len(v2_dataset.cases) == 10
+
 
 def test_versioned_deepseek_result_records_failed_gate():
     path = Path(__file__).parents[1] / "evals" / "results" / "deepseek-chat-v1.json"
@@ -189,6 +199,25 @@ def test_versioned_deepseek_result_records_failed_gate():
     assert result["dataset_name"] == "presales-daily-report-deidentified-v1-2026-04"
     assert result["case_count"] == 10
     assert result["passed"] is False
+
+    replay_path = path.parent / "deepseek-chat-v2-offline-replay.json"
+    replay = json.loads(replay_path.read_text(encoding="utf-8"))
+    assert replay["dataset_name"] == "presales-daily-report-deidentified-v2-2026-04"
+    assert replay["run_type"] == "offline-replay"
+    assert replay["independent_holdout"] is False
+    assert replay["passed"] is False
+
+    detailed_path = path.parent / replay["actual_extractions_source"]
+    detailed = json.loads(detailed_path.read_text(encoding="utf-8"))
+    dataset_path = path.parents[1] / "dataset.real.deidentified.v2.json"
+    recomputed = replay_saved_extractions(load_dataset(dataset_path), detailed)
+    assert recomputed.precision == replay["metrics"]["precision"]
+    assert recomputed.recall == replay["metrics"]["recall"]
+    assert recomputed.f1 == replay["metrics"]["f1"]
+    assert recomputed.owner_accuracy == replay["metrics"]["owner_accuracy"]
+    assert recomputed.review_required_accuracy == replay["metrics"]["review_required_accuracy"]
+    assert recomputed.hallucinated_facts == replay["metrics"]["hallucinated_facts"]
+    assert recomputed.passed is replay["passed"]
 
 
 def test_runner_artifact_omits_raw_content_field():
@@ -247,6 +276,23 @@ def test_runner_removes_reserved_output_when_extraction_fails():
 def test_runner_exit_code_reflects_gate_result():
     assert report_exit_code({"report": {"passed": True}}) == 0
     assert report_exit_code({"report": {"passed": False}}) == 1
+
+
+def test_replay_rejects_saved_outputs_in_wrong_case_order():
+    expected = output()
+    dataset = EvaluationDataset(
+        name="test",
+        cases=[case("case-1", "one", expected), case("case-2", "two", expected)],
+    )
+    extraction = expected.model_dump(mode="json")
+    artifact = {
+        "actual_extractions": [
+            {"case_id": "case-2", "extraction": extraction},
+            {"case_id": "case-1", "extraction": extraction},
+        ]
+    }
+    with pytest.raises(ValueError, match="case ids do not match dataset order"):
+        replay_saved_extractions(dataset, artifact)
 
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():

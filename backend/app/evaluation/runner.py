@@ -9,7 +9,7 @@ from pydantic_ai.models import infer_model
 from app.evaluation.structured_memory import StructuredMemoryEvaluator, load_dataset
 from app.extraction import ActivityExtractor, PydanticActivityExtractor
 from app.models import Activity
-from app.schemas.evaluation import EvaluationDataset
+from app.schemas.evaluation import EvaluationDataset, EvaluationReport
 from app.schemas.memory.extraction import StructuredActivityExtraction
 
 
@@ -22,6 +22,14 @@ class RecordingExtractor:
         output = self.extractor.extract(activity)
         self.outputs.append(output)
         return output
+
+
+class ReplayExtractor:
+    def __init__(self, outputs: list[StructuredActivityExtraction]) -> None:
+        self.outputs = iter(outputs)
+
+    def extract(self, _activity: Activity) -> StructuredActivityExtraction:
+        return next(self.outputs)
 
 
 def evaluate_dataset(
@@ -45,6 +53,22 @@ def evaluate_dataset(
             for case, output in zip(dataset.cases, recording.outputs, strict=True)
         ],
     }
+
+
+def replay_saved_extractions(
+    dataset: EvaluationDataset,
+    artifact: dict[str, Any],
+) -> EvaluationReport:
+    saved = artifact["actual_extractions"]
+    case_ids = [item["case_id"] for item in saved]
+    expected_case_ids = [case.id for case in dataset.cases]
+    if case_ids != expected_case_ids:
+        raise ValueError("saved extraction case ids do not match dataset order")
+    outputs = [
+        StructuredActivityExtraction.model_validate(item["extraction"])
+        for item in saved
+    ]
+    return StructuredMemoryEvaluator(ReplayExtractor(outputs)).evaluate(dataset)
 
 
 def build_parser() -> argparse.ArgumentParser:
