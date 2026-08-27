@@ -8,6 +8,7 @@ from .extraction import (
     TaskCandidate,
 )
 from .update import FactUpdateCount, MemoryUpdateResult
+from .processing import ActivityProcessingResult
 
 __all__ = [
     "DecisionCandidate",
@@ -16,6 +17,7 @@ __all__ = [
     "Participant",
     "FactUpdateCount",
     "MemoryUpdateResult",
+    "ActivityProcessingResult",
     "ProjectSignal",
     "RequirementCandidate",
     "RiskCandidate",
