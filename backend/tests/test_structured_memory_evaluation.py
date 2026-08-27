@@ -134,6 +134,13 @@ def test_dataset_template_loads():
     assert len(dataset.cases) == 1
 
 
+def test_deidentified_real_dataset_loads():
+    path = Path(__file__).parents[1] / "evals" / "dataset.real.deidentified.v1.json"
+    dataset = load_dataset(path)
+    assert dataset.name == "presales-daily-report-deidentified-v1-2026-04"
+    assert len(dataset.cases) == 10
+
+
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():
     base = {
         "id": "case-1",
