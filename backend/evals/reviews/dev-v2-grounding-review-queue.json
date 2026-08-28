@@ -1,0 +1,324 @@
+{
+  "queue_type": "grounding_semantic_review",
+  "independent_holdout": false,
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "dataset_sha256": "b94ed300c81343c0f2a583c933bb26a62b9d1c7e3585181f2dcac61627f5cfd0",
+  "extraction_artifact_sha256": "f4c7a3f703bf41861d950e670caabd553d4082d1bd08c8710d93236ea3e912bf",
+  "items": [
+    {
+      "case_id": "2026-04-13-security-roadmap",
+      "kind": "requirement",
+      "fact_title": "一期安全建设：零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱",
+      "source_quote": "一期覆盖零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-security-roadmap",
+      "kind": "requirement",
+      "fact_title": "二期安全建设：统一身份认证及数据安全交换",
+      "source_quote": "统一身份认证及数据安全交换放在二期考虑",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "requirement",
+      "fact_title": "桌管方案为最优先关注点",
+      "source_quote": "客户最关注桌管，其次是防泄密审计，最后是准入",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "requirement",
+      "fact_title": "桌管和DLP需重点比较本方案与竞品差异",
+      "source_quote": "桌管和DLP重点比较本方案与竞品差异",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "requirement",
+      "fact_title": "支持802.1x防私接方案",
+      "source_quote": "认可802.1x防私接效果，现有80%以上交换机及无线可支持",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "requirement",
+      "fact_title": "802.1x防私接需适配现有网络基础设施",
+      "source_quote": "现有80%以上交换机及无线可支持",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "task",
+      "fact_title": "继续对接部署",
+      "source_quote": "客户后续会针对性测试，需要继续对接部署",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "kind": "risk",
+      "fact_title": "客户将针对性测试本方案与竞品差异",
+      "source_quote": "桌管和DLP重点比较本方案与竞品差异，客户后续会针对性测试",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-nspm-tender",
+      "kind": "task",
+      "fact_title": "整理技术招标参数并提供给客户项目联系人",
+      "source_quote": "整理技术招标参数并提供给客户项目联系人",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-iam-multi-directory",
+      "kind": "requirement",
+      "fact_title": "客户希望后续获得完整网络安全建设方案材料",
+      "source_quote": "客户希望后续获得完整安全建设方案材料",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-iam-multi-directory",
+      "kind": "task",
+      "fact_title": "后续向客户D提供完整网络安全建设方案材料",
+      "source_quote": "客户希望后续获得完整安全建设方案材料",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-iam-multi-directory",
+      "kind": "risk",
+      "fact_title": "客户担心三层架构增加单点故障",
+      "source_quote": "客户担心三层架构增加单点故障",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "kind": "requirement",
+      "fact_title": "Exchange与Outlook场景下识别未下载附件邮件内容",
+      "source_quote": "客户询问Exchange与Outlook场景下，未下载附件时能否识别收到邮件的内容，需要技术确认。",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "kind": "requirement",
+      "fact_title": "DLP纳入EPP、EDR能力补充管控",
+      "source_quote": "文件共享下载管控较依赖EPP能力，客户认为DLP需要纳入EPP、EDR能力补充管控。",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "kind": "task",
+      "fact_title": "技术确认Exchange与Outlook场景下识别未下载附件邮件内容",
+      "source_quote": "客户询问Exchange与Outlook场景下，未下载附件时能否识别收到邮件的内容，需要技术确认。",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "kind": "task",
+      "fact_title": "客户E计划测试DLP、标签和加密功能",
+      "source_quote": null,
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "kind": "risk",
+      "fact_title": "客户认为DLP需要纳入EPP、EDR能力补充管控",
+      "source_quote": "文件共享下载管控较依赖EPP能力，客户认为DLP需要纳入EPP、EDR能力补充管控。",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-15-campus-access",
+      "kind": "requirement",
+      "fact_title": "终端全场景安全、移动安全和防勒索",
+      "source_quote": "与客户F交流终端全场景安全、移动安全和防勒索",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-15-campus-access",
+      "kind": "requirement",
+      "fact_title": "802.1x部署及总部和分公司统一管理能力",
+      "source_quote": "目前认可802.1x部署效果及总部和分公司统一管理能力",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-15-campus-access",
+      "kind": "task",
+      "fact_title": "提供整体规划材料",
+      "source_quote": "后续提供整体规划材料",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-15-campus-access",
+      "kind": "risk",
+      "fact_title": "客户已有其他厂商零信任和杀毒，桌管、防泄密需求不强",
+      "source_quote": "已有其他厂商零信任和杀毒，桌管、防泄密需求不强",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "requirement",
+      "fact_title": "替换后文件共享权限继承与跨OS使用",
+      "source_quote": "客户重点关注替换后文件共享权限继承与跨OS使用",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "requirement",
+      "fact_title": "不安全协议转换",
+      "source_quote": "不安全协议转换",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "requirement",
+      "fact_title": "保留原域控IP实现平滑切换",
+      "source_quote": "保留原域控IP实现平滑切换",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "requirement",
+      "fact_title": "独立RADIUS逃生方案评估",
+      "source_quote": "现有无线802.1x逃生依赖人工操作，后续再评估独立RADIUS逃生方案",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "task",
+      "fact_title": "评估独立RADIUS逃生方案",
+      "source_quote": "后续再评估独立RADIUS逃生方案",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "risk",
+      "fact_title": "内外网物理隔离导致无法统一管理",
+      "source_quote": "内外网物理隔离，无法统一管理",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "kind": "risk",
+      "fact_title": "无线802.1x逃生依赖人工操作",
+      "source_quote": "现有无线802.1x逃生依赖人工操作",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-access-device-discovery",
+      "kind": "task",
+      "fact_title": "评估单台7000设备同时承担后台、网关和扫描的性能影响",
+      "source_quote": "需要评估单台7000设备同时承担后台、网关和扫描的性能影响",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-access-device-discovery",
+      "kind": "task",
+      "fact_title": "评估类型识别规则库准确度带来的交付验收风险",
+      "source_quote": "以及类型识别规则库准确度带来的交付验收风险",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-access-device-discovery",
+      "kind": "risk",
+      "fact_title": "类型识别规则库准确度可能影响交付验收",
+      "source_quote": "类型识别规则库准确度带来的交付验收风险",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-16-access-device-discovery",
+      "kind": "risk",
+      "fact_title": "单台7000设备承担后台、网关和扫描的性能影响",
+      "source_quote": "需要评估单台7000设备同时承担后台、网关和扫描的性能影响",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "requirement",
+      "fact_title": "全网终端软件管理白名单方案",
+      "source_quote": "与客户I交流全网终端软件管理白名单。终端已加域，但域用户有管理员权限，可自行安装软件；当前仅通过黑名单和少量进程策略限制。新管理层希望结合AI工具使用，从合规、安全和管理角度实施白名单。初步方案包括安装管控白名单、存量软件白名单、软件仓库，以及平台升级、架构、云规则库、申请和发布流程，并与客户Portal流程结合。",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "requirement",
+      "fact_title": "终端软件管控现状限制",
+      "source_quote": "终端已加域，但域用户有管理员权限，可自行安装软件；当前仅通过黑名单和少量进程策略限制",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "task",
+      "fact_title": "下周再次核对方案和预算",
+      "source_quote": "下周再次核对方案和预算",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "task",
+      "fact_title": "从资产相关预算中协调项目资金",
+      "source_quote": "客户今年没有专项预算，计划从资产相关预算中协调",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "decision",
+      "fact_title": "计划从资产相关预算协调资金",
+      "source_quote": "客户今年没有专项预算，计划从资产相关预算中协调",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "risk",
+      "fact_title": "客户今年无专项预算",
+      "source_quote": "客户今年没有专项预算",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "kind": "risk",
+      "fact_title": "域用户具有管理员权限可自行安装软件",
+      "source_quote": "终端已加域，但域用户有管理员权限，可自行安装软件；当前仅通过黑名单和少量进程策略限制",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "requirement",
+      "fact_title": "IAM支持信创部署，暂不考虑高可用",
+      "source_quote": "项目要求支持信创部署，暂不考虑高可用",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "requirement",
+      "fact_title": "多因素认证不强制支持虹膜和认证证书，满足其他任意一项即可",
+      "source_quote": "默认不支持多因素认证中的虹膜和认证证书，客户确认这些要求满足其他任意一项即可",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "requirement",
+      "fact_title": "硬件或软件部署均需提供资源要求",
+      "source_quote": "无论硬件还是软件部署都需要提供资源要求",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "task",
+      "fact_title": "提供硬件或软件部署的资源要求",
+      "source_quote": "无论硬件还是软件部署都需要提供资源要求，相关信息已反馈销售",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "decision",
+      "fact_title": "客户J确认多因素认证满足其他任意一项即可（不强制虹膜和认证证书）",
+      "source_quote": "默认不支持多因素认证中的虹膜和认证证书，客户确认这些要求满足其他任意一项即可",
+      "verdict": "PENDING"
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "kind": "decision",
+      "fact_title": "暂不考虑高可用",
+      "source_quote": "项目要求支持信创部署，暂不考虑高可用",
+      "verdict": "PENDING"
+    }
+  ]
+}

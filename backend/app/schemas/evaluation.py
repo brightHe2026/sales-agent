@@ -216,3 +216,24 @@ class GroundingReport(BaseModel):
     exact_quote_accuracy: float
     passed: bool
     cases: list[GroundingCaseResult]
+
+
+class GroundingReviewItem(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    case_id: str
+    kind: FactKind
+    fact_title: str
+    source_quote: str | None = None
+    verdict: Literal["PENDING", "SUPPORTED", "PARTIAL", "UNSUPPORTED"] = "PENDING"
+
+
+class GroundingReviewQueue(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    queue_type: Literal["grounding_semantic_review"] = "grounding_semantic_review"
+    independent_holdout: Literal[False] = False
+    dataset_name: str
+    dataset_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    extraction_artifact_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    items: list[GroundingReviewItem]

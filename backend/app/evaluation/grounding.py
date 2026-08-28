@@ -1,4 +1,5 @@
 import argparse
+import hashlib
 import json
 from datetime import datetime, timezone
 from pathlib import Path
@@ -12,6 +13,8 @@ from app.models import Activity
 from app.schemas.evaluation import (
     EvaluationDataset,
     GroundingCaseResult,
+    GroundingReviewItem,
+    GroundingReviewQueue,
     GroundingReport,
 )
 from app.schemas.memory.extraction import StructuredActivityExtraction
@@ -156,6 +159,74 @@ def run_grounding(
             json.dump(grounded, output_file, ensure_ascii=False, indent=2)
             output_file.write("\n")
         return grounded
+    except BaseException:
+        output_file.close()
+        output_path.unlink(missing_ok=True)
+        raise
+
+
+def build_grounding_review_queue(
+    dataset: EvaluationDataset,
+    artifact: dict[str, Any],
+    *,
+    dataset_sha256: str,
+    extraction_artifact_sha256: str,
+) -> GroundingReviewQueue:
+    saved = artifact["actual_extractions"]
+    expected_case_ids = [case.id for case in dataset.cases]
+    if [item["case_id"] for item in saved] != expected_case_ids:
+        raise ValueError("saved extraction case ids do not match dataset order")
+    items: list[GroundingReviewItem] = []
+    for item in saved:
+        extraction = StructuredActivityExtraction.model_validate(item["extraction"])
+        for kind, candidates in {
+            "requirement": extraction.requirements,
+            "task": extraction.tasks,
+            "decision": extraction.decisions,
+            "risk": extraction.risks,
+        }.items():
+            items.extend(
+                GroundingReviewItem(
+                    case_id=item["case_id"],
+                    kind=kind,
+                    fact_title=candidate.title,
+                    source_quote=candidate.source_quote,
+                )
+                for candidate in candidates
+            )
+    return GroundingReviewQueue(
+        dataset_name=dataset.name,
+        dataset_sha256=dataset_sha256,
+        extraction_artifact_sha256=extraction_artifact_sha256,
+        items=items,
+    )
+
+
+def write_grounding_review_queue(
+    dataset_path: str | Path,
+    artifact_path: str | Path,
+    output_path: str | Path,
+) -> GroundingReviewQueue:
+    dataset_path = Path(dataset_path)
+    artifact_path = Path(artifact_path)
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_file = output_path.open("x", encoding="utf-8")
+    try:
+        with output_file:
+            dataset_bytes = dataset_path.read_bytes()
+            artifact_bytes = artifact_path.read_bytes()
+            dataset = EvaluationDataset.model_validate_json(dataset_bytes)
+            artifact = json.loads(artifact_bytes)
+            queue = build_grounding_review_queue(
+                dataset,
+                artifact,
+                dataset_sha256=hashlib.sha256(dataset_bytes).hexdigest(),
+                extraction_artifact_sha256=hashlib.sha256(artifact_bytes).hexdigest(),
+            )
+            json.dump(queue.model_dump(mode="json"), output_file, ensure_ascii=False, indent=2)
+            output_file.write("\n")
+        return queue
     except BaseException:
         output_file.close()
         output_path.unlink(missing_ok=True)

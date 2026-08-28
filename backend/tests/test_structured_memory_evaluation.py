@@ -13,7 +13,11 @@ from app.evaluation.adjudication import (
     sha256_file,
     write_post_hoc_report,
 )
-from app.evaluation.grounding import evaluate_saved_grounding, ground_saved_extractions
+from app.evaluation.grounding import (
+    build_grounding_review_queue,
+    evaluate_saved_grounding,
+    ground_saved_extractions,
+)
 from app.evaluation.runner import (
     evaluate_dataset,
     replay_saved_extractions,
@@ -324,6 +328,26 @@ def test_frozen_fact_grounding_cannot_change_saved_candidates():
         assert stripped == original
     assert grounded["grounding_report"]["passed"] is True
     assert grounded["independent_holdout"] is False
+
+
+def test_grounding_review_queue_is_pending_and_hash_bound():
+    expected = output()
+    expected.requirements[0].source_quote = "Exact evidence"
+    expected.tasks[0].source_quote = None
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "Exact evidence", expected)])
+    artifact = evaluate_dataset(
+        dataset, MappingExtractor({"Exact evidence": expected}), model_name="test:model"
+    )
+    queue = build_grounding_review_queue(
+        dataset,
+        artifact,
+        dataset_sha256="a" * 64,
+        extraction_artifact_sha256="b" * 64,
+    )
+    assert queue.independent_holdout is False
+    assert len(queue.items) == 2
+    assert {item.verdict for item in queue.items} == {"PENDING"}
+    assert [item.source_quote for item in queue.items] == ["Exact evidence", None]
 
 
 def test_runner_existing_output_fails_before_extractor_creation():
