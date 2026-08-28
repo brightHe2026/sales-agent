@@ -351,6 +351,23 @@ def test_prompt_v2_regression_evidence_recomputes_without_aliases():
     assert comparison["accepted"] is False
     assert candidate_report.f1 < baseline_report.f1
 
+    refiner_comparison = json.loads(
+        (results / "deepseek-chat-dev-refiner-v1-regression.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    refiner_artifact = json.loads(
+        (results / refiner_comparison["candidate_artifact"]).read_text(encoding="utf-8")
+    )
+    refiner_report = replay_saved_extractions(without_aliases, refiner_artifact)
+    assert refiner_report.f1 == refiner_comparison["candidate"]["f1"]
+    assert (
+        refiner_artifact["extraction_prompt_version"]
+        == "structured-memory-v1+structured-memory-refiner-v1"
+    )
+    assert refiner_comparison["accepted"] is False
+    assert refiner_report.f1 < baseline_report.f1
+
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():
     base = {
