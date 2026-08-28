@@ -197,3 +197,22 @@ class PostHocAdjudicationReport(BaseModel):
     adjudication_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
     strict_report: EvaluationReport
     adjudicated_metrics: PostHocMetrics
+
+
+class GroundingCaseResult(BaseModel):
+    case_id: str
+    fact_count: int
+    quoted_fact_count: int
+    exact_quote_matches: int
+    missing_quote_labels: list[str]
+    invalid_quote_labels: list[str]
+
+
+class GroundingReport(BaseModel):
+    dataset_name: str
+    case_count: int
+    fact_count: int
+    quote_coverage: float
+    exact_quote_accuracy: float
+    passed: bool
+    cases: list[GroundingCaseResult]

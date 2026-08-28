@@ -106,6 +106,7 @@ class DerivedFactMixin(UUIDMixin, TimestampMixin):
     title: Mapped[str] = mapped_column(String(255), nullable=False)
     confidence: Mapped[float | None] = mapped_column(Float)
     source_fingerprint: Mapped[str | None] = mapped_column(String(64))
+    source_quote: Mapped[str | None] = mapped_column(Text)
 
 
 class Requirement(DerivedFactMixin, Base):

@@ -7,7 +7,12 @@ from typing import Any, Callable
 from pydantic_ai.models import infer_model
 
 from app.evaluation.structured_memory import StructuredMemoryEvaluator, load_dataset
-from app.extraction import ActivityExtractor, PydanticActivityExtractor
+from app.extraction import (
+    ActivityExtractor,
+    GroundedActivityExtractor,
+    PydanticActivityExtractor,
+    PydanticEvidenceGrounder,
+)
 from app.models import Activity
 from app.schemas.evaluation import EvaluationDataset, EvaluationReport
 from app.schemas.memory.extraction import StructuredActivityExtraction
@@ -77,11 +82,23 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("dataset", type=Path)
     parser.add_argument("--model", default="deepseek:deepseek-chat")
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument(
+        "--ground-evidence",
+        action="store_true",
+        help="run a second, fact-immutable pass that attaches exact source quotes",
+    )
     return parser
 
 
 def build_extractor(model_name: str) -> ActivityExtractor:
     return PydanticActivityExtractor(infer_model(model_name))
+
+
+def build_grounded_extractor(model_name: str) -> ActivityExtractor:
+    model = infer_model(model_name)
+    return GroundedActivityExtractor(
+        PydanticActivityExtractor(model), PydanticEvidenceGrounder(model)
+    )
 
 
 def run_evaluation(
@@ -117,6 +134,9 @@ def main() -> int:
         args.dataset,
         args.output,
         model_name=args.model,
+        extractor_factory=(
+            build_grounded_extractor if args.ground_evidence else build_extractor
+        ),
     )
     report = artifact["report"]
     print(

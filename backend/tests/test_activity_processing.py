@@ -68,6 +68,7 @@ def extraction(*, review_required=False, requirement_description="SAML SSO is re
             RequirementCandidate(
                 title="Support SSO",
                 description=requirement_description,
+                source_quote="Customer requires SSO",
                 confidence=0.9,
             )
         ],
@@ -75,6 +76,7 @@ def extraction(*, review_required=False, requirement_description="SAML SSO is re
             TaskCandidate(
                 title="Send POC plan",
                 owner_type=OwnerType.SELF,
+                source_quote="I will send a POC plan",
                 confidence=0.85,
             )
         ],

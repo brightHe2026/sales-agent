@@ -14,6 +14,7 @@ class CandidateBase(BaseModel):
 
     title: NonBlankText
     description: str | None = None
+    source_quote: NonBlankText | None = None
     confidence: float = Field(ge=0.0, le=1.0)
 
 
@@ -64,3 +65,14 @@ class StructuredActivityExtraction(BaseModel):
     risks: list[RiskCandidate] = Field(default_factory=list)
     overall_confidence: float = Field(ge=0.0, le=1.0)
     review_required: bool = False
+
+
+class FactEvidenceAssignments(BaseModel):
+    """Exact quotes aligned by index; this structure cannot modify candidate facts."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    requirements: list[NonBlankText] = Field(default_factory=list)
+    tasks: list[NonBlankText] = Field(default_factory=list)
+    decisions: list[NonBlankText] = Field(default_factory=list)
+    risks: list[NonBlankText] = Field(default_factory=list)

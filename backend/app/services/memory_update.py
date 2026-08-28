@@ -16,7 +16,9 @@ class CandidateValidationError(ValueError):
 
 
 def candidate_fingerprint(kind: str, candidate: BaseModel) -> str:
-    semantic_data = candidate.model_dump(mode="json", exclude={"confidence"})
+    semantic_data = candidate.model_dump(
+        mode="json", exclude={"confidence", "source_quote"}
+    )
     canonical = json.dumps(semantic_data, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
     return hashlib.sha256(f"{kind}:{canonical}".encode()).hexdigest()
 
@@ -45,6 +47,7 @@ class MemoryUpdateService:
                 raise CandidateValidationError("Extraction requires human review")
             self._validate_required_descriptions(extraction)
             self._validate_task_owners(extraction)
+            self._validate_source_evidence(activity.raw_content, extraction)
         except CandidateValidationError:
             self.update_repository.rollback()
             raise
@@ -94,12 +97,30 @@ class MemoryUpdateService:
             raise CandidateValidationError("Unknown task owner cannot have an owner name")
 
     @staticmethod
+    def _validate_source_evidence(
+        raw_content: str, extraction: StructuredActivityExtraction
+    ) -> None:
+        candidates = [
+            *extraction.requirements,
+            *extraction.tasks,
+            *extraction.decisions,
+            *extraction.risks,
+        ]
+        if any(not candidate.source_quote for candidate in candidates):
+            raise CandidateValidationError("Every candidate fact requires a source quote")
+        if any(candidate.source_quote not in raw_content for candidate in candidates):
+            raise CandidateValidationError(
+                "Candidate source quote must occur in activity raw content"
+            )
+
+    @staticmethod
     def _requirements(activity_id, project_id, extraction):
         return [
             Requirement(
                 project_id=project_id,
                 source_activity_id=activity_id,
                 source_fingerprint=candidate_fingerprint("requirement", item),
+                source_quote=item.source_quote,
                 title=item.title,
                 description=item.description,
                 requirement_type=item.requirement_type,
@@ -117,6 +138,7 @@ class MemoryUpdateService:
                 project_id=project_id,
                 source_activity_id=activity_id,
                 source_fingerprint=candidate_fingerprint("task", item),
+                source_quote=item.source_quote,
                 title=item.title,
                 description=item.description,
                 owner_type=item.owner_type,
@@ -136,6 +158,7 @@ class MemoryUpdateService:
                 project_id=project_id,
                 source_activity_id=activity_id,
                 source_fingerprint=candidate_fingerprint("decision", item),
+                source_quote=item.source_quote,
                 title=item.title,
                 description=item.description,
                 decision_maker=item.decision_maker,
@@ -152,6 +175,7 @@ class MemoryUpdateService:
                 project_id=project_id,
                 source_activity_id=activity_id,
                 source_fingerprint=candidate_fingerprint("risk", item),
+                source_quote=item.source_quote,
                 title=item.title,
                 description=item.description,
                 severity=item.severity,

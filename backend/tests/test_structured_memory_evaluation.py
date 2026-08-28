@@ -13,6 +13,7 @@ from app.evaluation.adjudication import (
     sha256_file,
     write_post_hoc_report,
 )
+from app.evaluation.grounding import evaluate_saved_grounding, ground_saved_extractions
 from app.evaluation.runner import (
     evaluate_dataset,
     replay_saved_extractions,
@@ -266,6 +267,65 @@ def test_runner_artifact_omits_raw_content_field():
     assert "raw_content" not in json.dumps(artifact, ensure_ascii=False)
 
 
+def test_grounding_report_requires_present_exact_source_quotes():
+    expected = output()
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "Exact evidence", expected)])
+    actual = output()
+    actual.requirements[0].source_quote = "Exact evidence"
+    actual.tasks[0].source_quote = "Paraphrased evidence"
+    artifact = evaluate_dataset(
+        dataset, MappingExtractor({"Exact evidence": actual}), model_name="test:model"
+    )
+    report = evaluate_saved_grounding(dataset, artifact)
+    assert report.fact_count == 2
+    assert report.quote_coverage == 1.0
+    assert report.exact_quote_accuracy == 0.5
+    assert report.passed is False
+    assert report.cases[0].missing_quote_labels == []
+    assert report.cases[0].invalid_quote_labels == ["task:Send POC plan"]
+
+    actual.tasks[0].source_quote = None
+    artifact = evaluate_dataset(
+        dataset, MappingExtractor({"Exact evidence": actual}), model_name="test:model"
+    )
+    report = evaluate_saved_grounding(dataset, artifact)
+    assert report.quote_coverage == 0.5
+    assert report.exact_quote_accuracy == 1.0
+    assert report.cases[0].missing_quote_labels == ["task:Send POC plan"]
+
+
+def test_frozen_fact_grounding_cannot_change_saved_candidates():
+    expected = output()
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "Exact evidence", expected)])
+    artifact = evaluate_dataset(
+        dataset, MappingExtractor({"Exact evidence": expected}), model_name="test:model"
+    )
+
+    class StubGrounder:
+        version = "stub-grounding-v1"
+
+        def ground(self, activity, extraction):
+            grounded = extraction.model_copy(deep=True)
+            for candidate in [
+                *grounded.requirements,
+                *grounded.tasks,
+                *grounded.decisions,
+                *grounded.risks,
+            ]:
+                candidate.source_quote = activity.raw_content
+            return grounded
+
+    grounded = ground_saved_extractions(dataset, artifact, StubGrounder())
+    before = artifact["actual_extractions"][0]["extraction"]
+    after = grounded["actual_extractions"][0]["extraction"]
+    for group in ("requirements", "tasks", "decisions", "risks"):
+        original = [{k: v for k, v in item.items() if k != "source_quote"} for item in before[group]]
+        stripped = [{k: v for k, v in item.items() if k != "source_quote"} for item in after[group]]
+        assert stripped == original
+    assert grounded["grounding_report"]["passed"] is True
+    assert grounded["independent_holdout"] is False
+
+
 def test_runner_existing_output_fails_before_extractor_creation():
     root = Path(__file__).parents[1]
     existing_output = root / "evals" / "results" / "deepseek-chat-v1.json"
@@ -399,6 +459,41 @@ def test_prompt_v2_regression_evidence_recomputes_without_aliases():
     assert owner_review_report.owner_accuracy < baseline_with_aliases.owner_accuracy
     assert owner_review_report.f1 < baseline_with_aliases.f1
     assert owner_review_comparison["accepted"] is False
+
+
+def test_development_evidence_grounding_decision_is_replayable():
+    root = Path(__file__).parents[1] / "evals"
+    results = root / "results"
+    dataset = load_dataset(root / "dataset.real.deidentified.v2.json")
+    decision = json.loads(
+        (results / "deepseek-chat-dev-evidence-grounding-decision.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    baseline = json.loads(
+        (results / decision["baseline_artifact"]).read_text(encoding="utf-8")
+    )
+    single_pass = json.loads(
+        (results / decision["rejected_single_pass_artifact"]).read_text(encoding="utf-8")
+    )
+    two_stage = json.loads(
+        (results / decision["accepted_two_stage_artifact"]).read_text(encoding="utf-8")
+    )
+    baseline_report = replay_saved_extractions(dataset, baseline)
+    single_pass_report = replay_saved_extractions(dataset, single_pass)
+    two_stage_report = replay_saved_extractions(dataset, two_stage)
+    grounding = evaluate_saved_grounding(dataset, two_stage)
+
+    assert single_pass_report.f1 == decision["single_pass"]["f1"]
+    assert single_pass_report.f1 < baseline_report.f1
+    assert two_stage_report.model_dump(mode="json") == baseline_report.model_dump(mode="json")
+    assert two_stage_report.f1 == decision["two_stage"]["f1"]
+    assert grounding.fact_count == decision["two_stage"]["fact_count"]
+    assert sum(case.quoted_fact_count for case in grounding.cases) == decision["two_stage"]["quoted_fact_count"]
+    assert grounding.quote_coverage == decision["two_stage"]["quote_coverage"]
+    assert grounding.exact_quote_accuracy == 1.0
+    assert grounding.passed is False
+    assert decision["two_stage"]["accepted_as_safety_architecture"] is True
 
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():

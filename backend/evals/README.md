@@ -52,6 +52,32 @@ python -m app.evaluation.adjudication evals/dataset.json evals/results/model-run
 
 The output path is reserved before replay and must not already exist.
 
+## Exact source evidence
+
+New derived facts carry `source_quote`, an exact substring of the source activity. The
+application rejects an entire memory update when any requirement, task, decision, or risk
+has no quote or a quote that is not present verbatim in `raw_content`. Quotes are excluded
+from semantic fingerprints, so selecting a different supporting span cannot create a
+duplicate fact. Database columns remain nullable only for backward compatibility with
+facts created before migration `0003_fact_source_quotes`.
+
+Evidence grounding is intentionally a second stage. The first extraction stays immutable;
+the grounder may only attach quotes by list position. For development diagnostics, partial
+mode records exact quotes and leaves ungrounded facts empty. Production validation remains
+strict and blocks persistence when any quote is empty.
+
+Ground a frozen development artifact without re-extracting its facts:
+
+```powershell
+python -m app.evaluation.grounding evals/dataset.json evals/results/extractions.json `
+  --model deepseek:deepseek-chat --output evals/results/grounded.json
+```
+
+A grounding Gate passes only with 100% quote coverage and 100% exact-quote accuracy.
+This proves traceability to verbatim source text, not semantic entailment: an exact quote
+can still be irrelevant, incomplete, or attached to the wrong fact. Human adjudication or
+a separately validated entailment check remains necessary before claiming semantic support.
+
 Run the DeepSeek evaluation from `backend/` with `DEEPSEEK_API_KEY` configured:
 
 ```powershell

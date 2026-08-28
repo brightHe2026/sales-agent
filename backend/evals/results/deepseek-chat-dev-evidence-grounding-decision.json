@@ -1,0 +1,39 @@
+{
+  "evaluated_at": "2026-08-28",
+  "model": "deepseek:deepseek-chat",
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "run_type": "development-evidence-grounding-comparison",
+  "independent_holdout": false,
+  "baseline_artifact": "deepseek-chat-v1-detailed-run.json",
+  "rejected_single_pass_artifact": "deepseek-chat-dev-evidence-v1.json",
+  "accepted_two_stage_artifact": "deepseek-chat-dev-frozen-facts-evidence-v1.json",
+  "baseline": {
+    "f1": 0.6065573770491803,
+    "owner_accuracy": 0.7272727272727273,
+    "review_required_accuracy": 0.7,
+    "quote_coverage": 0.0
+  },
+  "single_pass": {
+    "f1": 0.36800000000000005,
+    "owner_accuracy": 0.5454545454545454,
+    "review_required_accuracy": 0.8,
+    "quote_coverage": 1.0,
+    "exact_quote_accuracy": 1.0,
+    "accepted": false,
+    "decision": "Reject because asking one pass to extract and quote evidence caused a severe fact and owner regression."
+  },
+  "two_stage": {
+    "f1": 0.6065573770491803,
+    "owner_accuracy": 0.7272727272727273,
+    "review_required_accuracy": 0.7,
+    "fact_metrics_identical_to_baseline": true,
+    "fact_count": 45,
+    "quoted_fact_count": 44,
+    "quote_coverage": 0.9777777777777777,
+    "exact_quote_accuracy": 1.0,
+    "grounding_gate_passed": false,
+    "accepted_as_safety_architecture": true,
+    "decision": "Accept the immutable second-stage grounding architecture. Keep the development grounding Gate failed and block persistence for any candidate without an exact source quote."
+  },
+  "notes": "Development evidence only. The locked holdout was not called, modified, replayed, or used to tune this feature."
+}

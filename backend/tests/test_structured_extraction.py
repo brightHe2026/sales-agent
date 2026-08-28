@@ -6,7 +6,8 @@ from pydantic_ai.messages import ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from app.enums.memory import ActivityType, ExtractionStatus, OwnerType, SourceType
-from app.extraction import PydanticActivityExtractor
+from app.extraction import PydanticActivityExtractor, PydanticEvidenceGrounder
+from app.extraction.evidence import EvidenceGroundingError
 from app.extraction.pydantic_ai import EXTRACTION_INSTRUCTIONS
 from app.models import Activity, Decision, Requirement, Risk, Task
 from app.repositories.memory import ActivityRepository
@@ -154,3 +155,95 @@ def test_extraction_prompt_version_and_grounding_rules_are_explicit():
     assert "Extract only facts explicitly supported" in EXTRACTION_INSTRUCTIONS
     assert "do not turn completed work into a task" in EXTRACTION_INSTRUCTIONS
     assert "SELF only when" in EXTRACTION_INSTRUCTIONS
+
+
+def test_evidence_grounder_only_attaches_exact_quotes(session):
+    activity = make_activity(session)
+    extraction = StructuredActivityExtraction(
+        summary="POC plan promised for Friday.",
+        tasks=[TaskCandidate(title="Provide POC plan", owner_type=OwnerType.SELF, confidence=0.9)],
+        overall_confidence=0.9,
+    )
+
+    def model_function(_messages, info: AgentInfo):
+        output_tool = info.output_tools[0]
+        return ModelResponse(
+            parts=[
+                ToolCallPart(
+                    output_tool.name,
+                    {
+                        "requirements": [],
+                        "tasks": ["provide the POC plan by Friday"],
+                        "decisions": [],
+                        "risks": [],
+                    },
+                )
+            ]
+        )
+
+    grounder = PydanticEvidenceGrounder(FunctionModel(model_function))
+    original = extraction.model_copy(deep=True)
+    grounded = grounder.ground(activity, extraction)
+    assert extraction == original
+    assert grounded.tasks[0].source_quote == "provide the POC plan by Friday"
+    assert grounded.tasks[0].model_dump(exclude={"source_quote"}) == original.tasks[0].model_dump(
+        exclude={"source_quote"}
+    )
+
+
+def test_evidence_grounder_rejects_non_verbatim_quote(session):
+    activity = make_activity(session)
+    extraction = StructuredActivityExtraction(
+        summary="Follow up.",
+        tasks=[TaskCandidate(title="Follow up", confidence=0.5)],
+        overall_confidence=0.5,
+    )
+
+    def model_function(_messages, info: AgentInfo):
+        return ModelResponse(
+            parts=[
+                ToolCallPart(
+                    info.output_tools[0].name,
+                    {"requirements": [], "tasks": ["invented"], "decisions": [], "risks": []},
+                )
+            ]
+        )
+
+    with pytest.raises(EvidenceGroundingError, match="not present"):
+        PydanticEvidenceGrounder(
+            FunctionModel(model_function), validation_retries=0
+        ).ground(activity, extraction)
+    partial = PydanticEvidenceGrounder(
+        FunctionModel(model_function), validation_retries=0, allow_partial=True
+    ).ground(activity, extraction)
+    assert partial.tasks[0].source_quote is None
+    assert partial.review_required == extraction.review_required
+
+
+def test_evidence_grounder_retries_semantic_validation(session):
+    activity = make_activity(session)
+    extraction = StructuredActivityExtraction(
+        summary="Follow up.",
+        tasks=[TaskCandidate(title="Follow up", confidence=0.5)],
+        overall_confidence=0.5,
+    )
+    calls = 0
+
+    def model_function(_messages, info: AgentInfo):
+        nonlocal calls
+        calls += 1
+        quote = "invented" if calls == 1 else "provide the POC plan by Friday"
+        return ModelResponse(
+            parts=[
+                ToolCallPart(
+                    info.output_tools[0].name,
+                    {"requirements": [], "tasks": [quote], "decisions": [], "risks": []},
+                )
+            ]
+        )
+
+    grounded = PydanticEvidenceGrounder(
+        FunctionModel(model_function), validation_retries=1
+    ).ground(activity, extraction)
+    assert calls == 2
+    assert grounded.tasks[0].source_quote == "provide the POC plan by Friday"
