@@ -1,0 +1,31 @@
+{
+  "evaluated_at": "2026-08-28",
+  "model": "deepseek:deepseek-chat",
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "run_type": "development-owner-review-prompt-comparison",
+  "independent_holdout": false,
+  "matching_policy": "normalized exact titles plus independently reviewed development aliases",
+  "baseline_artifact": "deepseek-chat-v1-detailed-run.json",
+  "candidate_artifact": "deepseek-chat-dev-owner-review-v1.json",
+  "baseline": {
+    "extraction_prompt_version": "structured-memory-v1-legacy-artifact",
+    "precision": 0.6607142857142857,
+    "recall": 0.5606060606060606,
+    "f1": 0.6065573770491803,
+    "owner_accuracy": 0.7272727272727273,
+    "review_required_accuracy": 0.7,
+    "unmatched_actual_labels": 19
+  },
+  "candidate": {
+    "extraction_prompt_version": "structured-memory-owner-review-v1",
+    "precision": 0.35,
+    "recall": 0.3181818181818182,
+    "f1": 0.3333333333333333,
+    "owner_accuracy": 0.6363636363636364,
+    "review_required_accuracy": 0.9,
+    "unmatched_actual_labels": 39
+  },
+  "accepted": false,
+  "decision": "Reject owner/review prompt candidate because fact extraction and owner accuracy regressed despite improved review accuracy; retain structured-memory-v1.",
+  "notes": "Development evidence only. The locked holdout was not used, called, modified, or replayed for this experiment."
+}

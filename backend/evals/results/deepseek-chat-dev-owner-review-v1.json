@@ -1,0 +1,799 @@
+{
+  "evaluated_at": "2026-08-28T05:48:23.648761+00:00",
+  "model": "deepseek:deepseek-chat",
+  "extraction_prompt_version": "structured-memory-owner-review-v1",
+  "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+  "report": {
+    "dataset_name": "presales-daily-report-deidentified-v2-2026-04",
+    "case_count": 10,
+    "precision": 0.35,
+    "recall": 0.3181818181818182,
+    "f1": 0.3333333333333333,
+    "owner_accuracy": 0.6363636363636364,
+    "review_required_accuracy": 0.9,
+    "hallucinated_facts": 39,
+    "passed": false,
+    "cases": [
+      {
+        "case_id": "2026-04-13-security-roadmap",
+        "expected_facts": 6,
+        "actual_facts": 4,
+        "matched_facts": 1,
+        "hallucinated_facts": 3,
+        "owner_checks": 0,
+        "owner_matches": 0,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:一期建设终端基线安全",
+          "requirement:一期建设终端开机登录认证",
+          "requirement:一期建设防泄密和上网沙箱",
+          "requirement:一期建设零信任业务访问",
+          "requirement:二期考虑统一身份认证和数据安全交换"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:一期建设：零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱",
+          "requirement:二期建设：统一身份认证及数据安全交换",
+          "decision:安全规划采用两期建设思路"
+        ]
+      },
+      {
+        "case_id": "2026-04-13-access-desktop-dlp",
+        "expected_facts": 6,
+        "actual_facts": 6,
+        "matched_facts": 3,
+        "hallucinated_facts": 3,
+        "owner_checks": 1,
+        "owner_matches": 1,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:准入需支持802.1x防私接",
+          "requirement:桌管为首要关注能力",
+          "requirement:防泄密审计为次要关注能力"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:客户关注优先级：桌管>防泄密审计>准入",
+          "requirement:桌管和dlp需重点比较本方案与竞品差异",
+          "risk:客户对桌管和dlp方案与竞品差异的评测存在不确定性"
+        ]
+      },
+      {
+        "case_id": "2026-04-14-nspm-tender",
+        "expected_facts": 3,
+        "actual_facts": 3,
+        "matched_facts": 1,
+        "hallucinated_facts": 2,
+        "owner_checks": 0,
+        "owner_matches": 0,
+        "review_required_match": false,
+        "missing_facts": [
+          "project:nspm项目",
+          "decision:技术招标参数已提供客户"
+        ],
+        "hallucinated_fact_labels": [
+          "project:nspm",
+          "task:整理技术招标参数并提供给客户项目联系人"
+        ]
+      },
+      {
+        "case_id": "2026-04-14-iam-multi-directory",
+        "expected_facts": 7,
+        "actual_facts": 4,
+        "matched_facts": 3,
+        "hallucinated_facts": 1,
+        "owner_checks": 1,
+        "owner_matches": 1,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:iam需支持多目录管理",
+          "requirement:统一管理总部和子公司账号权限",
+          "requirement:网关需支持认证逃生",
+          "decision:各ad作为不同业务系统接入iam"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:客户希望后续获得完整安全建设方案材料"
+        ]
+      },
+      {
+        "case_id": "2026-04-14-dlp-email",
+        "expected_facts": 6,
+        "actual_facts": 5,
+        "matched_facts": 1,
+        "hallucinated_facts": 4,
+        "owner_checks": 2,
+        "owner_matches": 0,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:文件共享下载需补充epp或edr管控",
+          "requirement:识别outlook收到邮件的内容",
+          "task:安排dlp标签和加密场景测试",
+          "task:技术确认outlook收件内容识别能力",
+          "risk:邮件内容识别能力尚未确认"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:dlp纳入epp、edr能力补充管控",
+          "requirement:exchange与outlook场景下未下载附件时能否识别收到邮件内容的技术确认",
+          "task:计划进行dlp、标签和加密测试",
+          "risk:exchange与outlook场景邮件内容识别存在技术不确定性"
+        ]
+      },
+      {
+        "case_id": "2026-04-15-campus-access",
+        "expected_facts": 8,
+        "actual_facts": 8,
+        "matched_facts": 3,
+        "hallucinated_facts": 5,
+        "owner_checks": 2,
+        "owner_matches": 2,
+        "review_required_match": true,
+        "missing_facts": [
+          "project:准入项目",
+          "requirement:准入支持802.1x",
+          "requirement:支持总部和分公司统一管理",
+          "decision:后续重点推进准入项目",
+          "risk:既有dhcp准入测试效果不好"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:准入项目推进",
+          "requirement:整体规划材料提供",
+          "requirement:终端全场景安全、移动安全和防勒索交流",
+          "risk:dhcp准入测试效果不好",
+          "risk:客户已有其他厂商零信任和杀毒产品"
+        ]
+      },
+      {
+        "case_id": "2026-04-16-xcad-file-sharing",
+        "expected_facts": 7,
+        "actual_facts": 8,
+        "matched_facts": 3,
+        "hallucinated_facts": 5,
+        "owner_checks": 1,
+        "owner_matches": 1,
+        "review_required_match": true,
+        "missing_facts": [
+          "customer:客户g",
+          "requirement:身份网关支持不安全协议转换",
+          "risk:内外网物理隔离导致无法统一管理",
+          "risk:无线802.1x逃生依赖人工操作"
+        ],
+        "hallucinated_fact_labels": [
+          "project:信创域控替换",
+          "customer:g",
+          "requirement:不安全协议转换支持",
+          "requirement:内外网独立ad无法统一管理",
+          "risk:现无线802.1x逃生依赖人工操作"
+        ]
+      },
+      {
+        "case_id": "2026-04-16-access-device-discovery",
+        "expected_facts": 8,
+        "actual_facts": 11,
+        "matched_facts": 3,
+        "hallucinated_facts": 8,
+        "owner_checks": 2,
+        "owner_matches": 1,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:识别hub设备",
+          "requirement:识别家用路由和非授权dhcp服务器",
+          "task:评估单台设备多角色运行的性能影响",
+          "risk:单台设备同时承担后台网关扫描可能影响性能",
+          "risk:设备类型识别准确度可能影响验收"
+        ],
+        "hallucinated_fact_labels": [
+          "requirement:识别hub、家用路由和非授权dhcp服务器",
+          "requirement:通过nmap扫描识别家用路由和非授权dhcp",
+          "requirement:通过snmp识别hub",
+          "task:决定是否参与h厂区准入项目",
+          "task:评估单台7000设备性能影响",
+          "decision:是否参与h厂区准入项目（待定）",
+          "risk:单台7000设备性能瓶颈风险",
+          "risk:类型识别规则库准确度交付验收风险"
+        ]
+      },
+      {
+        "case_id": "2026-04-17-software-whitelist",
+        "expected_facts": 9,
+        "actual_facts": 5,
+        "matched_facts": 3,
+        "hallucinated_facts": 2,
+        "owner_checks": 2,
+        "owner_matches": 1,
+        "review_required_match": true,
+        "missing_facts": [
+          "requirement:建设软件仓库并纳入白名单",
+          "requirement:软件申请发布流程对接客户portal",
+          "task:从资产相关预算中协调项目资金",
+          "decision:采用安装管控白名单存量白名单和软件仓库组合方案",
+          "risk:域用户管理员权限允许自行安装软件",
+          "risk:本年度没有软件管理专项预算"
+        ],
+        "hallucinated_fact_labels": [
+          "task:从资产相关预算中协调预算",
+          "risk:客户今年无专项目预算"
+        ]
+      },
+      {
+        "case_id": "2026-04-17-iam-parameters",
+        "expected_facts": 6,
+        "actual_facts": 6,
+        "matched_facts": 0,
+        "hallucinated_facts": 6,
+        "owner_checks": 0,
+        "owner_matches": 0,
+        "review_required_match": true,
+        "missing_facts": [
+          "customer:客户j",
+          "requirement:iam支持信创部署",
+          "requirement:提供硬件和软件部署资源要求",
+          "decision:暂不考虑高可用",
+          "decision:虹膜和证书要求可由其他任意认证项满足",
+          "decision:部署资源要求已反馈销售"
+        ],
+        "hallucinated_fact_labels": [
+          "customer:j",
+          "requirement:iam需支持信创部署",
+          "requirement:多因素认证支持虹膜或认证证书以外任意一项即可",
+          "requirement:无论硬件还是软件部署均需提供资源要求",
+          "task:提供资源要求给销售",
+          "risk:不支持多因素认证的虹膜和认证证书"
+        ]
+      }
+    ]
+  },
+  "actual_extractions": [
+    {
+      "case_id": "2026-04-13-security-roadmap",
+      "extraction": {
+        "summary": "为客户A整理安全规划方案，按两期建设思路输出。一期覆盖零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱等模块；统一身份认证及数据安全交换放在二期考虑。方案已罗列对应模块并提供给渠道和客户。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户A",
+          "confidence": 0.8
+        },
+        "requirements": [
+          {
+            "title": "一期建设：零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱",
+            "description": "一期覆盖零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱等安全模块。",
+            "confidence": 0.75,
+            "requirement_type": "TRANSFORMATIONAL",
+            "priority": "MEDIUM"
+          },
+          {
+            "title": "二期建设：统一身份认证及数据安全交换",
+            "description": "统一身份认证及数据安全交换放在二期考虑。",
+            "confidence": 0.75,
+            "requirement_type": "TRANSFORMATIONAL",
+            "priority": "LOW"
+          }
+        ],
+        "tasks": [],
+        "decisions": [
+          {
+            "title": "安全规划采用两期建设思路",
+            "description": "为客户A的安全规划按两期建设思路输出，一期覆盖零信任业务访问、终端开机登录认证、终端基线安全、防泄密、上网沙箱；统一身份认证及数据安全交换放在二期考虑。",
+            "confidence": 0.8,
+            "decision_maker": "UNKNOWN",
+            "decided_at": null
+          }
+        ],
+        "risks": [],
+        "overall_confidence": 0.75,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-13-access-desktop-dlp",
+      "extraction": {
+        "summary": "与客户B线上沟通准入、桌管、DLP方案。客户关注优先级为：桌管最高、防泄密审计次之、准入最后。客户认可802.1x防私接效果，现有80%以上交换机及无线设备可支持。桌管和DLP需重点比较本方案与竞品差异，客户后续将针对性测试，并需继续对接部署。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户B",
+          "confidence": 0.8
+        },
+        "requirements": [
+          {
+            "title": "客户关注优先级：桌管>防泄密审计>准入",
+            "description": "客户最关注桌管，其次是防泄密审计，最后是准入。",
+            "confidence": 0.8,
+            "requirement_type": null,
+            "priority": "MEDIUM"
+          },
+          {
+            "title": "桌管和DLP需重点比较本方案与竞品差异",
+            "description": "桌管和DLP重点比较本方案与竞品差异，作为后续沟通过程中的重点。",
+            "confidence": 0.8,
+            "requirement_type": null,
+            "priority": null
+          }
+        ],
+        "tasks": [
+          {
+            "title": "继续对接部署",
+            "description": "客户后续会针对性测试桌管和DLP，需要继续对接部署。",
+            "confidence": 0.75,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": null
+          }
+        ],
+        "decisions": [
+          {
+            "title": "客户认可802.1x防私接效果",
+            "description": "客户认可802.1x防私接效果，现有80%以上交换机及无线设备可支持。",
+            "confidence": 0.75,
+            "decision_maker": null,
+            "decided_at": null
+          }
+        ],
+        "risks": [
+          {
+            "title": "客户对桌管和DLP方案与竞品差异的评测存在不确定性",
+            "description": "客户后续会进行针对性测试，比较本方案与竞品差异，测试结果存在不确定性。",
+            "confidence": 0.6,
+            "severity": "MEDIUM",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.75,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-14-nspm-tender",
+      "extraction": {
+        "summary": "跟进客户C的NSPM项目，整理技术招标参数并提供给客户项目联系人。这是一项投标相关的跟进活动。",
+        "project_signal": {
+          "project_name": "NSPM",
+          "customer_name": "客户C",
+          "confidence": 0.8
+        },
+        "requirements": [],
+        "tasks": [
+          {
+            "title": "整理技术招标参数并提供给客户项目联系人",
+            "description": "跟进客户C的NSPM项目，整理技术招标参数并提供给客户项目联系人。",
+            "confidence": 0.7,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [],
+        "overall_confidence": 0.7,
+        "review_required": true
+      }
+    },
+    {
+      "case_id": "2026-04-14-iam-multi-directory",
+      "extraction": {
+        "summary": "拜访客户D交流IAM和信创域控。客户总部为单林单域多站点，子公司使用不同独立域；总部和子公司各有HR系统并分别同步各自AD。旧IAM按组织分别管理账号权限，未实现全网统一。方案是将各AD作为不同业务系统接入IAM，实现账号和密码统一管理。客户担心三层架构增加单点故障，已说明网关只代理转发并支持认证逃生。客户希望后续获得完整安全建设方案材料。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户D",
+          "confidence": 0.8
+        },
+        "requirements": [
+          {
+            "title": "客户希望后续获得完整安全建设方案材料",
+            "description": "客户希望后续获得完整安全建设方案材料",
+            "confidence": 0.9,
+            "requirement_type": "交付物",
+            "priority": null
+          }
+        ],
+        "tasks": [
+          {
+            "title": "提供完整安全建设方案材料",
+            "description": "客户希望后续获得完整安全建设方案材料，需要提供",
+            "confidence": 0.85,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "客户担心三层架构增加单点故障",
+            "description": "客户担心三层架构增加单点故障，已说明网关只代理转发并支持认证逃生，但客户顾虑仍存在",
+            "confidence": 0.7,
+            "severity": "MEDIUM",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.85,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-14-dlp-email",
+      "extraction": {
+        "summary": "客户E（CUSTOMER_VISIT，2026-04-14）交流DLP、标签和加密方案并计划进行测试。客户询问在Exchange与Outlook场景下，未下载附件时能否识别收到的邮件内容，需要技术确认。文件共享下载管控较依赖EPP能力，客户认为DLP需要纳入EPP、EDR能力以补充管控。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户E",
+          "confidence": 0.7
+        },
+        "requirements": [
+          {
+            "title": "Exchange与Outlook场景下未下载附件时能否识别收到邮件内容的技术确认",
+            "description": "客户E询问在Exchange与Outlook场景下，未下载附件时能否识别收到邮件的内容，需要技术确认。",
+            "confidence": 0.6,
+            "requirement_type": "技术确认",
+            "priority": "MEDIUM"
+          },
+          {
+            "title": "DLP纳入EPP、EDR能力补充管控",
+            "description": "客户认为DLP需要纳入EPP、EDR能力补充管控，主要用于文件共享下载管控。",
+            "confidence": 0.7,
+            "requirement_type": "能力集成",
+            "priority": "MEDIUM"
+          }
+        ],
+        "tasks": [
+          {
+            "title": "计划进行DLP、标签和加密测试",
+            "description": "客户E计划对DLP、标签和加密方案进行测试。",
+            "confidence": 0.6,
+            "owner_type": "CUSTOMER",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "Exchange与Outlook场景邮件内容识别存在技术不确定性",
+            "description": "客户询问未下载附件时能否识别邮件内容，需技术确认，存在功能可行性的不确定。",
+            "confidence": 0.6,
+            "severity": "UNKNOWN",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.7,
+        "review_required": true
+      }
+    },
+    {
+      "case_id": "2026-04-15-campus-access",
+      "extraction": {
+        "summary": "与客户F（CUSTOMER_VISIT，2026-04-15）交流终端全场景安全、移动安全和防勒索。客户曾测试DHCP准入但效果不好，目前认可802.1x部署效果及总部和分公司统一管理能力。客户已有其他厂商的零信任和杀毒产品，桌管、防泄密需求不强，未使用微软AD。后续计划提供整体规划材料，重点配合渠道推进准入项目。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户F",
+          "confidence": 0.9
+        },
+        "requirements": [
+          {
+            "title": "终端全场景安全、移动安全和防勒索交流",
+            "description": "与客户F交流终端全场景安全、移动安全和防勒索相关方案。",
+            "confidence": 0.85,
+            "requirement_type": null,
+            "priority": null
+          },
+          {
+            "title": "整体规划材料提供",
+            "description": "后续为客户F提供整体规划材料。",
+            "confidence": 0.8,
+            "requirement_type": "规划材料",
+            "priority": null
+          },
+          {
+            "title": "准入项目推进",
+            "description": "重点配合渠道推进客户F的准入项目，客户认可802.1x部署效果。",
+            "confidence": 0.8,
+            "requirement_type": null,
+            "priority": null
+          }
+        ],
+        "tasks": [
+          {
+            "title": "提供整体规划材料",
+            "description": "后续为客户F提供整体规划材料。",
+            "confidence": 0.8,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": null
+          },
+          {
+            "title": "配合渠道推进准入项目",
+            "description": "重点配合渠道推进客户F的准入项目。",
+            "confidence": 0.8,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": null
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "客户已有其他厂商零信任和杀毒产品",
+            "description": "客户F已有其他厂商的零信任和杀毒产品，可能影响方案推广，且桌管、防泄密需求不强。",
+            "confidence": 0.85,
+            "severity": "MEDIUM",
+            "mitigation": null
+          },
+          {
+            "title": "DHCP准入测试效果不好",
+            "description": "客户曾测试DHCP准入但效果不好，需要重点关注802.1x方案的适配。",
+            "confidence": 0.85,
+            "severity": "LOW",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.82,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-16-xcad-file-sharing",
+      "extraction": {
+        "summary": "拜访客户G，交流信创（信息技术应用创新）域控替换议题。客户现有内外网两套相互独立的微软AD，内网为单域多站点，使用GPO、文件共享和DNS。客户重点关注替换后的文件共享权限继承与跨OS使用、不安全协议转换、保留原域控IP实现平滑切换。内外网物理隔离，无法统一管理。现有无线802.1x逃生依赖人工操作，后续待评估独立RADIUS逃生方案。",
+        "project_signal": {
+          "project_name": "信创域控替换",
+          "customer_name": "G",
+          "confidence": 0.85
+        },
+        "requirements": [
+          {
+            "title": "替换后文件共享权限继承与跨OS使用",
+            "description": "客户关注信创域控替换后文件共享权限继承是否正确，以及跨操作系统（跨OS）使用的支持与兼容性。",
+            "confidence": 0.8,
+            "requirement_type": "客户关注点",
+            "priority": "HIGH"
+          },
+          {
+            "title": "不安全协议转换支持",
+            "description": "客户关注替换过程中不安全协议的转换处理（如老版本协议向安全协议转换）。",
+            "confidence": 0.75,
+            "requirement_type": "客户关注点",
+            "priority": "MEDIUM"
+          },
+          {
+            "title": "保留原域控IP实现平滑切换",
+            "description": "客户要求替换后保留原域控IP，以实现信创域控的平滑切换，减少对现有环境的影响。",
+            "confidence": 0.85,
+            "requirement_type": "客户关注点",
+            "priority": "HIGH"
+          },
+          {
+            "title": "内外网独立AD无法统一管理",
+            "description": "客户内外网物理隔离，两套AD相互独立，无法统一管理，需分别处理信创替换。",
+            "confidence": 0.85,
+            "requirement_type": "环境约束",
+            "priority": "MEDIUM"
+          }
+        ],
+        "tasks": [
+          {
+            "title": "评估独立RADIUS逃生方案",
+            "description": "客户现有无线802.1x逃生依赖人工操作，后续需评估独立RADIUS逃生方案以替代或补充现状。",
+            "confidence": 0.7,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "现无线802.1x逃生依赖人工操作",
+            "description": "客户现有无线802.1x逃生机制依赖人工操作，缺乏自动化独立逃生能力，存在故障时无线接入受影响的风险。",
+            "confidence": 0.75,
+            "severity": "MEDIUM",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.78,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-16-access-device-discovery",
+      "extraction": {
+        "summary": "跟进客户H厂区准入项目，参数要求识别Hub、家用路由和非授权DHCP服务器。方案依赖SNMP识别Hub，并通过Nmap扫描识别家用路由和非授权DHCP。需评估单台7000设备同时承担后台、网关和扫描的性能影响，以及类型识别规则库准确度带来的交付验收风险，再决定是否参与该项目。",
+        "project_signal": {
+          "project_name": "厂区准入项目",
+          "customer_name": "H",
+          "confidence": 0.8
+        },
+        "requirements": [
+          {
+            "title": "识别Hub、家用路由和非授权DHCP服务器",
+            "description": "参数要求识别Hub、家用路由和非授权DHCP服务器",
+            "confidence": 0.85,
+            "requirement_type": "functional",
+            "priority": "HIGH"
+          },
+          {
+            "title": "通过SNMP识别Hub",
+            "description": "方案依赖SNMP识别Hub",
+            "confidence": 0.7,
+            "requirement_type": "technical",
+            "priority": null
+          },
+          {
+            "title": "通过Nmap扫描识别家用路由和非授权DHCP",
+            "description": "方案通过Nmap扫描识别家用路由和非授权DHCP",
+            "confidence": 0.7,
+            "requirement_type": "technical",
+            "priority": null
+          }
+        ],
+        "tasks": [
+          {
+            "title": "评估单台7000设备性能影响",
+            "description": "评估单台7000设备同时承担后台、网关和扫描的性能影响",
+            "confidence": 0.75,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "HIGH"
+          },
+          {
+            "title": "评估类型识别规则库准确度带来的交付验收风险",
+            "description": "评估类型识别规则库准确度带来的交付验收风险",
+            "confidence": 0.75,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "HIGH"
+          },
+          {
+            "title": "决定是否参与H厂区准入项目",
+            "description": "在评估性能影响和交付验收风险后，再决定是否参与该项目",
+            "confidence": 0.7,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [
+          {
+            "title": "是否参与H厂区准入项目（待定）",
+            "description": "需先评估单台7000设备性能影响和类型识别规则库准确度带来的交付验收风险，再决定是否参与该项目",
+            "confidence": 0.6,
+            "decision_maker": "SELF",
+            "decided_at": null
+          }
+        ],
+        "risks": [
+          {
+            "title": "单台7000设备性能瓶颈风险",
+            "description": "单台7000设备需要同时承担后台、网关和扫描功能，可能存在性能影响",
+            "confidence": 0.7,
+            "severity": "UNKNOWN",
+            "mitigation": null
+          },
+          {
+            "title": "类型识别规则库准确度交付验收风险",
+            "description": "类型识别规则库准确度可能影响交付验收",
+            "confidence": 0.7,
+            "severity": "UNKNOWN",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.8,
+        "review_required": true
+      }
+    },
+    {
+      "case_id": "2026-04-17-software-whitelist",
+      "extraction": {
+        "summary": "与客户I交流全网终端软件管理白名单方案。现状：终端已加域，但域用户有管理员权限可自行安装软件，当前仅通过黑名单和少量进程策略限制。新管理层希望结合AI工具使用，从合规、安全和管理角度实施白名单。初步方案包括安装管控白名单、存量软件白名单、软件仓库、平台升级、架构、云规则库、申请和发布流程，并与客户Portal流程结合。下周将再次核对方案和预算。客户今年没有专项预算，计划从资产相关预算中协调。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "客户I",
+          "confidence": 0.85
+        },
+        "requirements": [
+          {
+            "title": "全网终端软件管理白名单方案",
+            "description": "从合规、安全和管理角度实施终端软件白名单管控，包括安装管控白名单、存量软件白名单、软件仓库，以及平台升级、架构、云规则库、申请和发布流程，并与客户Portal流程结合，同时结合AI工具使用。",
+            "confidence": 0.7,
+            "requirement_type": "功能/管控方案",
+            "priority": "MEDIUM"
+          }
+        ],
+        "tasks": [
+          {
+            "title": "下周再次核对方案和预算",
+            "description": "与客户I下周再次核对白名单方案及预算安排。",
+            "confidence": 0.75,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          },
+          {
+            "title": "从资产相关预算中协调预算",
+            "description": "客户今年没有专项预算，计划从资产相关预算中协调白名单项目的资金。",
+            "confidence": 0.6,
+            "owner_type": "CUSTOMER",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "客户今年无专项目预算",
+            "description": "客户今年没有专项预算，需从资产相关预算中协调，可能影响项目推进进度。",
+            "confidence": 0.65,
+            "severity": "MEDIUM",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.78,
+        "review_required": false
+      }
+    },
+    {
+      "case_id": "2026-04-17-iam-parameters",
+      "extraction": {
+        "summary": "线上与客户J就IAM技术参数进行交流。确认默认不支持多因素认证中的虹膜和认证证书，客户接受满足其他任意一项即可。项目需支持信创部署，暂不考虑高可用。无论硬件还是软件部署都需要提供资源要求，相关信息已反馈销售。",
+        "project_signal": {
+          "project_name": null,
+          "customer_name": "J",
+          "confidence": 0.75
+        },
+        "requirements": [
+          {
+            "title": "IAM需支持信创部署",
+            "description": "项目要求支持信创部署，暂不考虑高可用。",
+            "confidence": 0.9,
+            "requirement_type": "技术/部署",
+            "priority": null
+          },
+          {
+            "title": "多因素认证支持虹膜或认证证书以外任意一项即可",
+            "description": "默认不支持多因素认证中的虹膜和认证证书，客户确认这些要求满足其他任意一项即可。",
+            "confidence": 0.85,
+            "requirement_type": "功能",
+            "priority": null
+          },
+          {
+            "title": "无论硬件还是软件部署均需提供资源要求",
+            "description": "硬件或软件部署都需要提供资源要求，相关信息已反馈销售。",
+            "confidence": 0.8,
+            "requirement_type": "交付物",
+            "priority": null
+          }
+        ],
+        "tasks": [
+          {
+            "title": "提供资源要求给销售",
+            "description": "无论硬件还是软件部署都需要提供资源要求，相关信息已反馈销售。",
+            "confidence": 0.8,
+            "owner_type": "SELF",
+            "owner_name": null,
+            "due_at": null,
+            "priority": "MEDIUM"
+          }
+        ],
+        "decisions": [],
+        "risks": [
+          {
+            "title": "不支持多因素认证的虹膜和认证证书",
+            "description": "IAM默认不支持多因素认证中的虹膜和认证证书，客户已确认其他任意一项即可满足。",
+            "confidence": 0.85,
+            "severity": "LOW",
+            "mitigation": null
+          }
+        ],
+        "overall_confidence": 0.82,
+        "review_required": false
+      }
+    }
+  ]
+}

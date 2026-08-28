@@ -374,6 +374,32 @@ def test_prompt_v2_regression_evidence_recomputes_without_aliases():
     assert refiner_comparison["accepted"] is False
     assert refiner_report.f1 < baseline_report.f1
 
+    owner_review_comparison = json.loads(
+        (results / "deepseek-chat-dev-owner-review-v1-regression.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    owner_review_artifact = json.loads(
+        (results / owner_review_comparison["candidate_artifact"]).read_text(
+            encoding="utf-8"
+        )
+    )
+    baseline_with_aliases = replay_saved_extractions(dataset, baseline)
+    owner_review_report = replay_saved_extractions(dataset, owner_review_artifact)
+    assert baseline_with_aliases.f1 == owner_review_comparison["baseline"]["f1"]
+    assert baseline_with_aliases.precision == owner_review_comparison["baseline"]["precision"]
+    assert baseline_with_aliases.recall == owner_review_comparison["baseline"]["recall"]
+    assert baseline_with_aliases.hallucinated_facts == owner_review_comparison["baseline"]["unmatched_actual_labels"]
+    assert owner_review_report.f1 == owner_review_comparison["candidate"]["f1"]
+    assert owner_review_report.precision == owner_review_comparison["candidate"]["precision"]
+    assert owner_review_report.recall == owner_review_comparison["candidate"]["recall"]
+    assert owner_review_report.hallucinated_facts == owner_review_comparison["candidate"]["unmatched_actual_labels"]
+    assert owner_review_artifact["extraction_prompt_version"] == "structured-memory-owner-review-v1"
+    assert owner_review_report.review_required_accuracy > baseline_with_aliases.review_required_accuracy
+    assert owner_review_report.owner_accuracy < baseline_with_aliases.owner_accuracy
+    assert owner_review_report.f1 < baseline_with_aliases.f1
+    assert owner_review_comparison["accepted"] is False
+
 
 def test_dataset_rejects_blank_records_naive_time_and_empty_cases():
     base = {
