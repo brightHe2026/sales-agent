@@ -1,0 +1,30 @@
+{
+  "dataset_name": "presales-daily-report-independent-holdout-v1",
+  "dataset_sha256": "603142e5ca904fa56be69578d9bb8f7a118c70793d77b93a41409a9ccbcb9f59",
+  "extraction_artifact_sha256": "225945f073679368eaba49eb2f1df8354bd01274055b1d0f8526732bf74a0ed8",
+  "matches": [
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"customer","expected_title":"客户K","actual_title":"K"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"兼容较多Win7设备","actual_title":"支持大量Win7设备"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"按3个园区每园区2张网规划","actual_title":"按3个园区、每园区2张网规划"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"每张网络部署独立管理服务器和管理PC","actual_title":"每张网部署独立管理服务器硬件和一台管理PC"},
+    {"case_id":"2025-11-05-channel-endpoint-security","kind":"requirement","expected_title":"增加终端安全管控补充现有DLP","actual_title":"互联网游戏行业老客户希望增加终端安全管控"},
+    {"case_id":"2025-11-05-channel-endpoint-security","kind":"risk","expected_title":"现有DLP仍存在泄密风险","actual_title":"客户部署现有DLP后仍认为有泄密风险"},
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"customer","expected_title":"客户M","actual_title":"M"},
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"requirement","expected_title":"DLP支持自定义多级灵活审批并对接OA","actual_title":"DLP审批需支持自定义多级灵活审批并对接OA"},
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"requirement","expected_title":"统一界面展示U盘拷贝审批审计信息","actual_title":"U盘拷贝、审批等审计信息需在一个UI展示"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"customer","expected_title":"客户N","actual_title":"N"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"requirement","expected_title":"以软件管理和安全管理为核心","actual_title":"软件管理和安全管理为核心"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"task","expected_title":"准备客户测试","actual_title":"准备测试"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"task","expected_title":"提供模块供客户选择确认","actual_title":"提供相关模块供客户选择确认"},
+    {"case_id":"2025-11-06-government-network-operations","kind":"customer","expected_title":"客户O","actual_title":"O"},
+    {"case_id":"2025-11-06-government-network-operations","kind":"requirement","expected_title":"统一管理防火墙策略运维","actual_title":"防火墙策略运维统一管理"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"customer","expected_title":"客户P","actual_title":"P"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"requirement","expected_title":"一期以集团总部准入为主","actual_title":"一期针对集团总部，以准入为主"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"task","expected_title":"客户内部过会后启动招标","actual_title":"客户内部过会后发布招标，预计12月前发布"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"risk","expected_title":"二期站点IT人员不足且多为兼职","actual_title":"其他点合计仅10名IT且很多是行政兼职"},
+    {"case_id":"2026-03-09-xiam-environment","kind":"task","expected_title":"验证能否登录Web管理界面","actual_title":"等待客户验证是否能登录Web管理界面"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"customer","expected_title":"客户S","actual_title":"S"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"requirement","expected_title":"梳理检查防火墙ACL","actual_title":"防火墙ACL梳理检查"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"risk","expected_title":"客户下周无法配合测试","actual_title":"客户时间冲突"}
+  ]
+}

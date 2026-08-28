@@ -8,7 +8,11 @@ from pydantic import ValidationError
 
 from app.enums.memory import ActivityType, OwnerType, SourceType
 from app.evaluation import StructuredMemoryEvaluator, load_dataset
-from app.evaluation.adjudication import replay_with_adjudication, sha256_file
+from app.evaluation.adjudication import (
+    replay_with_adjudication,
+    sha256_file,
+    write_post_hoc_report,
+)
 from app.evaluation.runner import (
     evaluate_dataset,
     replay_saved_extractions,
@@ -525,3 +529,50 @@ def test_external_adjudication_rejects_tampering_unknown_facts_and_duplicate_map
         dataset_path.unlink(missing_ok=True)
         artifact_path.unlink(missing_ok=True)
         adjudication_path.unlink(missing_ok=True)
+
+
+def test_approved_holdout_adjudication_writes_explicit_post_hoc_report():
+    root = Path(__file__).parents[1] / "evals"
+    output_path = root / "results" / f".post-hoc-{uuid4().hex}.json"
+    try:
+        report = write_post_hoc_report(
+            root / "dataset.real.deidentified.holdout-v1.json",
+            root / "results" / "deepseek-chat-independent-holdout-v1.json",
+            root / "reviews" / "holdout-v1.adjudication.json",
+            output_path,
+        )
+        saved = json.loads(output_path.read_text(encoding="utf-8"))
+        assert report.report_type == "post_hoc_adjudication"
+        assert report.independent_holdout is False
+        assert report.strict_report.passed is False
+        assert report.adjudicated_metrics.f1 == pytest.approx(0.5)
+        assert saved == report.model_dump(mode="json")
+        assert "passed" not in saved["adjudicated_metrics"]
+    finally:
+        output_path.unlink(missing_ok=True)
+
+
+def test_post_hoc_writer_never_overwrites_and_cleans_failed_reservation():
+    root = Path(__file__).parents[1] / "evals"
+    existing = root / "results" / f".post-hoc-existing-{uuid4().hex}.json"
+    failed = root / "results" / f".post-hoc-failed-{uuid4().hex}.json"
+    missing_adjudication = root / "reviews" / f".missing-{uuid4().hex}.json"
+    dataset = root / "dataset.real.deidentified.holdout-v1.json"
+    artifact = root / "results" / "deepseek-chat-independent-holdout-v1.json"
+    existing.write_text("sentinel", encoding="utf-8")
+    try:
+        with pytest.raises(FileExistsError):
+            write_post_hoc_report(
+                dataset,
+                artifact,
+                root / "reviews" / "holdout-v1.adjudication.json",
+                existing,
+            )
+        assert existing.read_text(encoding="utf-8") == "sentinel"
+
+        with pytest.raises(FileNotFoundError):
+            write_post_hoc_report(dataset, artifact, missing_adjudication, failed)
+        assert not failed.exists()
+    finally:
+        existing.unlink(missing_ok=True)
+        failed.unlink(missing_ok=True)

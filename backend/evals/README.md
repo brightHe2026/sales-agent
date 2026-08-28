@@ -43,6 +43,15 @@ independent acceptance test. The post-hoc envelope is explicitly marked
 `report_type: post_hoc_adjudication` and `independent_holdout: false`; its adjudicated
 metrics deliberately have no `passed` field.
 
+Generate a separately marked post-hoc report with an approved adjudication:
+
+```powershell
+python -m app.evaluation.adjudication evals/dataset.json evals/results/model-run.json `
+  evals/reviews/approved-adjudication.json --output evals/results/post-hoc.json
+```
+
+The output path is reserved before replay and must not already exist.
+
 Run the DeepSeek evaluation from `backend/` with `DEEPSEEK_API_KEY` configured:
 
 ```powershell

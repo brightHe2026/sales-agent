@@ -1,3 +1,4 @@
+import argparse
 import hashlib
 import json
 from pathlib import Path
@@ -102,3 +103,56 @@ def replay_with_adjudication(
             adjudicated_report.model_dump(exclude={"passed"})
         ),
     )
+
+
+def write_post_hoc_report(
+    dataset_path: str | Path,
+    artifact_path: str | Path,
+    adjudication_path: str | Path,
+    output_path: str | Path,
+) -> PostHocAdjudicationReport:
+    """Atomically reserve a new output and remove it if replay or writing fails."""
+    output_path = Path(output_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_file = output_path.open("x", encoding="utf-8")
+    try:
+        with output_file:
+            report = replay_with_adjudication(
+                dataset_path, artifact_path, adjudication_path
+            )
+            json.dump(report.model_dump(mode="json"), output_file, ensure_ascii=False, indent=2)
+            output_file.write("\n")
+        return report
+    except BaseException:
+        output_file.close()
+        output_path.unlink(missing_ok=True)
+        raise
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="Replay a post-hoc semantic adjudication")
+    parser.add_argument("dataset", type=Path)
+    parser.add_argument("artifact", type=Path)
+    parser.add_argument("adjudication", type=Path)
+    parser.add_argument("--output", type=Path, required=True)
+    args = parser.parse_args()
+    report = write_post_hoc_report(
+        args.dataset, args.artifact, args.adjudication, args.output
+    )
+    print(
+        json.dumps(
+            {
+                "output": str(args.output),
+                "report_type": report.report_type,
+                "independent_holdout": report.independent_holdout,
+                "strict_passed": report.strict_report.passed,
+                "adjudicated_f1": report.adjudicated_metrics.f1,
+            },
+            ensure_ascii=False,
+        )
+    )
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
