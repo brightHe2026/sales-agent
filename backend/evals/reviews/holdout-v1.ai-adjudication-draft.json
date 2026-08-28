@@ -1,0 +1,61 @@
+{
+  "status": "ai_draft_not_human_approved",
+  "purpose": "diagnostic_only_not_an_independent_gate",
+  "dataset_name": "presales-daily-report-independent-holdout-v1",
+  "dataset_sha256": "603142e5ca904fa56be69578d9bb8f7a118c70793d77b93a41409a9ccbcb9f59",
+  "extraction_artifact_sha256": "225945f073679368eaba49eb2f1df8354bd01274055b1d0f8526732bf74a0ed8",
+  "proposed_equivalent_matches": [
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"customer","expected_title":"客户K","actual_title":"K"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"兼容较多Win7设备","actual_title":"支持大量Win7设备"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"按3个园区每园区2张网规划","actual_title":"按3个园区、每园区2张网规划"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"每张网络部署独立管理服务器和管理PC","actual_title":"每张网部署独立管理服务器硬件和一台管理PC"},
+    {"case_id":"2025-11-05-channel-endpoint-security","kind":"requirement","expected_title":"增加终端安全管控补充现有DLP","actual_title":"互联网游戏行业老客户希望增加终端安全管控"},
+    {"case_id":"2025-11-05-channel-endpoint-security","kind":"risk","expected_title":"现有DLP仍存在泄密风险","actual_title":"客户部署现有DLP后仍认为有泄密风险"},
+
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"customer","expected_title":"客户M","actual_title":"M"},
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"requirement","expected_title":"DLP支持自定义多级灵活审批并对接OA","actual_title":"DLP审批需支持自定义多级灵活审批并对接OA"},
+    {"case_id":"2025-11-05-dlp-consolidation","kind":"requirement","expected_title":"统一界面展示U盘拷贝审批审计信息","actual_title":"U盘拷贝、审批等审计信息需在一个UI展示"},
+
+    {"case_id":"2025-11-06-software-security-selection","kind":"customer","expected_title":"客户N","actual_title":"N"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"requirement","expected_title":"以软件管理和安全管理为核心","actual_title":"软件管理和安全管理为核心"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"task","expected_title":"准备客户测试","actual_title":"准备测试"},
+    {"case_id":"2025-11-06-software-security-selection","kind":"task","expected_title":"提供模块供客户选择确认","actual_title":"提供相关模块供客户选择确认"},
+
+    {"case_id":"2025-11-06-government-network-operations","kind":"customer","expected_title":"客户O","actual_title":"O"},
+    {"case_id":"2025-11-06-government-network-operations","kind":"requirement","expected_title":"统一管理防火墙策略运维","actual_title":"防火墙策略运维统一管理"},
+
+    {"case_id":"2025-11-07-phased-access-control","kind":"customer","expected_title":"客户P","actual_title":"P"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"requirement","expected_title":"一期以集团总部准入为主","actual_title":"一期针对集团总部，以准入为主"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"task","expected_title":"客户内部过会后启动招标","actual_title":"客户内部过会后发布招标，预计12月前发布"},
+    {"case_id":"2025-11-07-phased-access-control","kind":"risk","expected_title":"二期站点IT人员不足且多为兼职","actual_title":"其他点合计仅10名IT且很多是行政兼职"},
+
+    {"case_id":"2026-03-09-xiam-environment","kind":"task","expected_title":"验证能否登录Web管理界面","actual_title":"等待客户验证是否能登录Web管理界面"},
+
+    {"case_id":"2026-03-13-nspm-poc","kind":"customer","expected_title":"客户S","actual_title":"S"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"requirement","expected_title":"梳理检查防火墙ACL","actual_title":"防火墙ACL梳理检查"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"risk","expected_title":"客户下周无法配合测试","actual_title":"客户时间冲突"}
+  ],
+  "deferred_candidates": [
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"适配生产隔离网络","actual_title":"生产网隔离","reason":"requirement_modality_changed_to_environment_fact"},
+    {"case_id":"2025-11-04-terminal-control-budget","kind":"requirement","expected_title":"适配设备和软件开机自动启动","actual_title":"设备与软件开机自动启动","reason":"requirement_modality_changed_to_environment_fact"},
+    {"case_id":"2025-11-05-channel-endpoint-security","kind":"task","expected_title":"方案可行后安排客户交流确认","actual_title":"如果客户认为可行，后续可安排客户交流确认","reason":"content_equivalent_but_owner_self_changed_to_unknown"},
+    {"case_id":"2025-11-06-government-network-operations","kind":"task","expected_title":"安排虎符锁与业务开发人员交流","actual_title":"与业务开发人员进一步交流虎符锁验证接入","reason":"owner_self_changed_to_unknown_and_action_scope_differs"},
+    {"case_id":"2026-03-11-domain-exit-authentication","kind":"task","expected_title":"确认采用XCAD还是客户端开机登录方案","actual_title":"沟通确定采用XCAD还是客户端结合开机登录场景的方案","reason":"content_equivalent_but_owner_self_changed_to_unknown"},
+    {"case_id":"2026-03-13-nspm-poc","kind":"requirement","expected_title":"辅助排查路由或NAT配置问题","actual_title":"辅助网络异常排障","reason":"actual_title_is_broader_although_description_mentions_route_and_nat"}
+  ],
+  "diagnostic_counts": {
+    "high_confidence_equivalent_pairs": 23,
+    "deferred_candidates": 6,
+    "strict_matches_before_adjudication": 7,
+    "notes": "Remaining unmatched items require separate review for granularity, classification drift, true omissions, entity-scope differences, and supported-but-unannotated facts."
+  },
+  "non_equivalence_findings": [
+    {"category":"granularity_difference","examples":["策略按时间生效并设置缓冲期被拆成两个requirements","DLP扩容驻场维保和平台升级被拆成三个tasks","退域并接管认证被合并为一个requirement"]},
+    {"category":"classification_drift","examples":["被叫停项目由decision抽成risk","前期只记录日志不管控由requirement抽成decision","在线纳管测试由requirement抽成task"]},
+    {"category":"true_omission","examples":["客户向内部领导汇报确认"]},
+    {"category":"structured_slot_omission_or_merging_loss","examples":["约150台终端只出现在risk description","后续按区域逐步管控只出现在decision description","XIAM只出现在summary而未进入project signal"]},
+    {"category":"entity_scope_or_placeholder_error","examples":["渠道A是本次拜访渠道而不是未命名终端客户","客户P占位符被过度抽取为项目名","客户T占位符被错放为项目名且customer遗漏"]},
+    {"category":"supported_inference","examples":["测试结果决定采购被抽取为risk"]},
+    {"category":"stale_or_incorrect_risk","examples":["已解决的CentOS 8环境问题仍被模型输出为当前risk"]}
+  ]
+}
