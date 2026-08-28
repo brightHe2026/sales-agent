@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
@@ -133,3 +134,66 @@ class EvaluationReport(BaseModel):
     hallucinated_facts: int
     passed: bool
     cases: list[EvaluationCaseResult]
+
+
+FactKind = Literal["project", "customer", "requirement", "task", "decision", "risk"]
+
+
+class EquivalentFactMatch(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    case_id: str = Field(min_length=1)
+    kind: FactKind
+    expected_title: str = Field(min_length=1)
+    actual_title: str = Field(min_length=1)
+
+
+class EvaluationAdjudication(BaseModel):
+    """Human-approved semantic equivalences bound to immutable input artifacts."""
+
+    model_config = ConfigDict(extra="forbid")
+
+    dataset_name: str = Field(min_length=1)
+    dataset_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    extraction_artifact_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    matches: list[EquivalentFactMatch] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def require_one_to_one_matches(self) -> "EvaluationAdjudication":
+        expected = [
+            (item.case_id, item.kind, " ".join(item.expected_title.casefold().split()))
+            for item in self.matches
+        ]
+        actual = [
+            (item.case_id, item.kind, " ".join(item.actual_title.casefold().split()))
+            for item in self.matches
+        ]
+        if len(expected) != len(set(expected)):
+            raise ValueError("an expected fact may be adjudicated only once")
+        if len(actual) != len(set(actual)):
+            raise ValueError("an actual fact may be adjudicated only once")
+        return self
+
+
+class PostHocMetrics(BaseModel):
+    """Adjudicated metrics intentionally omit the independent Gate verdict."""
+
+    dataset_name: str
+    case_count: int
+    precision: float
+    recall: float
+    f1: float
+    owner_accuracy: float
+    review_required_accuracy: float
+    hallucinated_facts: int
+    cases: list[EvaluationCaseResult]
+
+
+class PostHocAdjudicationReport(BaseModel):
+    report_type: Literal["post_hoc_adjudication"] = "post_hoc_adjudication"
+    independent_holdout: Literal[False] = False
+    dataset_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    extraction_artifact_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    adjudication_sha256: str = Field(pattern=r"^[0-9a-f]{64}$")
+    strict_report: EvaluationReport
+    adjudicated_metrics: PostHocMetrics

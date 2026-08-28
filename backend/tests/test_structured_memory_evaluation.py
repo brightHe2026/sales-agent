@@ -1,12 +1,14 @@
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 import pytest
 from pydantic import ValidationError
 
 from app.enums.memory import ActivityType, OwnerType, SourceType
 from app.evaluation import StructuredMemoryEvaluator, load_dataset
+from app.evaluation.adjudication import replay_with_adjudication, sha256_file
 from app.evaluation.runner import (
     evaluate_dataset,
     replay_saved_extractions,
@@ -437,3 +439,89 @@ def test_case_rejects_unknown_blank_and_ambiguous_aliases():
             expected=ambiguous_expected,
             fact_aliases={"requirement:高可用": ["Support SSO"]},
         )
+
+
+def test_external_adjudication_replays_equivalent_fact_without_mutating_sources():
+    expected = output(requirement="兼容较多Win7设备")
+    actual = output(requirement="支持大量Win7设备")
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "record", expected)])
+    temp = Path(__file__).parents[1] / "evals" / "results"
+    token = uuid4().hex
+    dataset_path = temp / f".adjudication-dataset-{token}.json"
+    artifact_path = temp / f".adjudication-result-{token}.json"
+    adjudication_path = temp / f".adjudication-{token}.json"
+    try:
+        dataset_path.write_text(dataset.model_dump_json(indent=2), encoding="utf-8")
+        artifact = evaluate_dataset(dataset, MappingExtractor({"record": actual}), model_name="test:model")
+        artifact_path.write_text(json.dumps(artifact, ensure_ascii=False, indent=2), encoding="utf-8")
+        strict_report = replay_saved_extractions(dataset, artifact)
+        original_dataset = dataset_path.read_bytes()
+        original_artifact = artifact_path.read_bytes()
+        adjudication = {
+            "dataset_name": "test",
+            "dataset_sha256": sha256_file(dataset_path),
+            "extraction_artifact_sha256": sha256_file(artifact_path),
+            "matches": [{
+                "case_id": "case-1", "kind": "requirement",
+                "expected_title": "兼容较多Win7设备", "actual_title": "支持大量Win7设备",
+            }],
+        }
+        adjudication_path.write_text(json.dumps(adjudication, ensure_ascii=False), encoding="utf-8")
+        adjudicated = replay_with_adjudication(dataset_path, artifact_path, adjudication_path)
+        assert strict_report.f1 == 0.5
+        assert adjudicated.report_type == "post_hoc_adjudication"
+        assert adjudicated.independent_holdout is False
+        assert adjudicated.strict_report.f1 == strict_report.f1
+        assert adjudicated.adjudicated_metrics.f1 == 1.0
+        assert "passed" not in adjudicated.adjudicated_metrics.model_dump()
+        assert dataset_path.read_bytes() == original_dataset
+        assert artifact_path.read_bytes() == original_artifact
+    finally:
+        dataset_path.unlink(missing_ok=True)
+        artifact_path.unlink(missing_ok=True)
+        adjudication_path.unlink(missing_ok=True)
+
+
+def test_external_adjudication_rejects_tampering_unknown_facts_and_duplicate_mapping():
+    expected = output(requirement="Expected")
+    actual = output(requirement="Actual")
+    dataset = EvaluationDataset(name="test", cases=[case("case-1", "record", expected)])
+    temp = Path(__file__).parents[1] / "evals" / "results"
+    token = uuid4().hex
+    dataset_path = temp / f".adjudication-invalid-dataset-{token}.json"
+    artifact_path = temp / f".adjudication-invalid-result-{token}.json"
+    adjudication_path = temp / f".adjudication-invalid-{token}.json"
+    try:
+        dataset_path.write_text(dataset.model_dump_json(), encoding="utf-8")
+        artifact = evaluate_dataset(dataset, MappingExtractor({"record": actual}), model_name="test:model")
+        artifact_path.write_text(json.dumps(artifact), encoding="utf-8")
+        base = {
+            "dataset_name": "test",
+            "dataset_sha256": sha256_file(dataset_path),
+            "extraction_artifact_sha256": sha256_file(artifact_path),
+            "matches": [{"case_id": "case-1", "kind": "requirement", "expected_title": "Missing", "actual_title": "Actual"}],
+        }
+        adjudication_path.write_text(json.dumps(base), encoding="utf-8")
+        with pytest.raises(ValueError, match="unknown expected fact"):
+            replay_with_adjudication(dataset_path, artifact_path, adjudication_path)
+        base["matches"][0]["expected_title"] = "Expected"
+        base["matches"].append(dict(base["matches"][0]))
+        adjudication_path.write_text(json.dumps(base), encoding="utf-8")
+        with pytest.raises(ValidationError, match="adjudicated only once"):
+            replay_with_adjudication(dataset_path, artifact_path, adjudication_path)
+        base["matches"] = base["matches"][:1]
+        base["dataset_sha256"] = "0" * 64
+        adjudication_path.write_text(json.dumps(base), encoding="utf-8")
+        with pytest.raises(ValueError, match="dataset SHA-256"):
+            replay_with_adjudication(dataset_path, artifact_path, adjudication_path)
+        base["dataset_sha256"] = sha256_file(dataset_path)
+        artifact["dataset_name"] = "different-dataset"
+        artifact_path.write_text(json.dumps(artifact), encoding="utf-8")
+        base["extraction_artifact_sha256"] = sha256_file(artifact_path)
+        adjudication_path.write_text(json.dumps(base), encoding="utf-8")
+        with pytest.raises(ValueError, match="artifact dataset name"):
+            replay_with_adjudication(dataset_path, artifact_path, adjudication_path)
+    finally:
+        dataset_path.unlink(missing_ok=True)
+        artifact_path.unlink(missing_ok=True)
+        adjudication_path.unlink(missing_ok=True)

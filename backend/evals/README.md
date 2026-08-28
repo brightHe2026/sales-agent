@@ -33,6 +33,16 @@ The template is not an evaluation result and must never be reported as real data
 Versioned aggregate run evidence is stored under `results/`; failed runs remain failed and
 must not be reclassified by weakening matching rules after observing model output.
 
+Post-run semantic review must be stored in a separate adjudication file. It binds to the
+exact dataset and extraction artifact with SHA-256 hashes and may only add human-approved,
+one-to-one equivalences between facts of the same kind. Replaying an adjudication produces
+a separate post-hoc report: it never replaces the original strict Gate, never makes the
+holdout independent again, and never changes either source file. This distinction lets us
+measure paraphrase effects without presenting an observed-and-adjudicated result as a new
+independent acceptance test. The post-hoc envelope is explicitly marked
+`report_type: post_hoc_adjudication` and `independent_holdout: false`; its adjudicated
+metrics deliberately have no `passed` field.
+
 Run the DeepSeek evaluation from `backend/` with `DEEPSEEK_API_KEY` configured:
 
 ```powershell
